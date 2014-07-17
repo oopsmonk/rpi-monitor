@@ -12,8 +12,8 @@ gWidth=800
 gHeight=400
 
 function usage(){
-    echo "usage : $0 period"
-    echo "Ex:"
+    echo "usage : $0 option"
+    echo "option: -rm, -?h, -?d, ..."
     echo "$0 -1h"
     echo "$0 -6h"
     echo "$0 -1d"
@@ -22,6 +22,12 @@ function usage(){
 }
 
 if [ $# -ne 0 ]; then
+    if [ $1 = "-rm" ]; then
+        rm $REPORTPATH/*.png
+        echo "clean Repoert files..."
+        exit 0
+    fi
+
     PERIOD=$1
 else
     usage
@@ -31,7 +37,7 @@ fi
 echo "Perio = $PERIOD"
 
 #CPU Temperature 
-rrdtool graph $REPORTPATH/cpuTemp.png --start $PERIOD \
+rrdtool graph $REPORTPATH/cpuTemp$PERIOD.png --start $PERIOD \
     --title "CPU Temperature" \
     -w $gWidth -h $gHeight \
     --lower-limit 40 --upper-limit 70 \
@@ -40,7 +46,7 @@ rrdtool graph $REPORTPATH/cpuTemp.png --start $PERIOD \
     LINE1:ctemp$cRED:"Cpu Temp"
 
 #CPU Usage 
-rrdtool graph $REPORTPATH/cpuUsage.png --start $PERIOD \
+rrdtool graph $REPORTPATH/cpuUsage$PERIOD.png --start $PERIOD \
     --title "CPU Usage (%)" \
     -w $gWidth -h $gHeight \
     --lower-limit 0 --upper-limit 100 \
@@ -49,7 +55,7 @@ rrdtool graph $REPORTPATH/cpuUsage.png --start $PERIOD \
     LINE2:cusage$cGREEN:"Cpu Usage"
 
 #PIDs
-rrdtool graph $REPORTPATH/pids.png --start $PERIOD \
+rrdtool graph $REPORTPATH/pids$PERIOD.png --start $PERIOD \
     --title "PID count" \
     -w $gWidth -h $gHeight \
     --lower-limit 0 \
@@ -58,7 +64,7 @@ rrdtool graph $REPORTPATH/pids.png --start $PERIOD \
     LINE2:pids$cGREEN:"PIDs"
 
 #Memoery
-rrdtool graph $REPORTPATH/memInfo.png --start $PERIOD \
+rrdtool graph $REPORTPATH/memInfo$PERIOD.png --start $PERIOD \
     --title "Memoery Usage" \
     -w $gWidth -h $gHeight \
     DEF:total=$RRDPATH/meminfo.rrd:total:AVERAGE \
@@ -76,7 +82,7 @@ rrdtool graph $REPORTPATH/memInfo.png --start $PERIOD \
 #    LINE2:used$cBLUE:"Used"
 
 ##Disk0 
-#rrdtool graph $REPORTPATH/disk-0.png --start $PERIOD \
+#rrdtool graph $REPORTPATH/disk-0$PERIOD.png --start $PERIOD \
 #    --title "Disk Usage (bytes)" \
 #    -w $gWidth -h $gHeight \
 #    DEF:total=$RRDPATH/disk-0.rrd:total:AVERAGE \
@@ -87,7 +93,7 @@ rrdtool graph $REPORTPATH/memInfo.png --start $PERIOD \
 #    LINE3:free$cBLUE:"Free"
 #
 ##Disk1 
-#rrdtool graph $REPORTPATH/disk-1.png --start $PERIOD \
+#rrdtool graph $REPORTPATH/disk-1$PERIOD.png --start $PERIOD \
 #    --title "Disk Usage (bytes)" \
 #    -w $gWidth -h $gHeight \
 #    DEF:total=$RRDPATH/disk-1.rrd:total:AVERAGE \
@@ -98,7 +104,7 @@ rrdtool graph $REPORTPATH/memInfo.png --start $PERIOD \
 #    LINE3:free$cBLUE:"Free"
 
 #Disk Percentage 
-rrdtool graph $REPORTPATH/mount-usage.png --start $PERIOD \
+rrdtool graph $REPORTPATH/mount-usage$PERIOD.png --start $PERIOD \
     --title "Mount Point Usage (%)" \
     -w $gWidth -h $gHeight \
     --lower-limit 0 --upper-limit 100 \
@@ -110,7 +116,7 @@ rrdtool graph $REPORTPATH/mount-usage.png --start $PERIOD \
 
 
 #Eth0 I/O Bytes 
-rrdtool graph $REPORTPATH/net-eth0.png --start $PERIOD \
+rrdtool graph $REPORTPATH/net-eth0$PERIOD.png --start $PERIOD \
     --title "Internet I/O Bytes" \
     --vertical-label="Bytes/s" \
     -w $gWidth -h $gHeight \
@@ -124,7 +130,7 @@ rrdtool graph $REPORTPATH/net-eth0.png --start $PERIOD \
 #    LINE2:recv$cGREEN:"Recv_bytes"
 
 #Disk IO
-rrdtool graph $REPORTPATH/HD-mmcblk0.png --start $PERIOD \
+rrdtool graph $REPORTPATH/HD-mmcblk0$PERIOD.png --start $PERIOD \
     --title "mmcblk0 IO (bytes)" \
     -w $gWidth -h $gHeight \
     DEF:rbytes=$RRDPATH/HD-mmcblk0.rrd:rbytes:AVERAGE \
@@ -134,7 +140,7 @@ rrdtool graph $REPORTPATH/HD-mmcblk0.png --start $PERIOD \
     LINE2:wbytes$cBLUE:"Write"
 
 ##Disk IO
-#rrdtool graph $REPORTPATH/HD-mmcblk0p1.png --start $PERIOD \
+#rrdtool graph $REPORTPATH/HD-mmcblk0p1$PERIOD.png --start $PERIOD \
 #    --title "mmcblk0p1 IO (bytes)" \
 #    -w $gWidth -h $gHeight \
 #    DEF:rbytes=$RRDPATH/HD-mmcblk0p1.rrd:rbytes:AVERAGE \
@@ -144,7 +150,7 @@ rrdtool graph $REPORTPATH/HD-mmcblk0.png --start $PERIOD \
 #    LINE2:wbytes$cBLUE:"Write"
 
 ##Disk IO
-#rrdtool graph $REPORTPATH/HD-mmcblk0p2.png --start $PERIOD \
+#rrdtool graph $REPORTPATH/HD-mmcblk0p2$PERIOD.png --start $PERIOD \
 #    --title "mmcblk0p2 IO (bytes)" \
 #    -w $gWidth -h $gHeight \
 #    DEF:rbytes=$RRDPATH/HD-mmcblk0p2.rrd:rbytes:AVERAGE \
