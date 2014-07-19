@@ -22,9 +22,6 @@ gWidth='800'
 gHeight='400'
 
 def CpuInfo(period):
-    global cBLUE, cGREEN, cRED, gWidth, gHeight
-    global REPORTDIR, CpuRRDFile
-
     #Temp
     rrdtool.graph(REPORTDIR + '/cpuTemp' + period + '.png', '--start', period,
         '--title', 'CPU Temperature', '-w', gWidth, '-h', gHeight, 
@@ -59,9 +56,6 @@ def CpuInfo(period):
 
 
 def MemoryInfo(period):
-    global cBLUE, cGREEN, cRED, gWidth, gHeight
-    global REPORTDIR, MemRRDFile, MB
-
     #Memory Usage
     rrdtool.graph(REPORTDIR + '/memUsage' + period + '.png', '--start', period,
         '--title', 'Memory Usage', '-w', gWidth, '-h', gHeight,
@@ -81,9 +75,6 @@ def MemoryInfo(period):
         'COMMENT:\\n')
 
 def DiskInfo(period):
-    global cBLUE, cGREEN, cRED, gWidth, gHeight, cList
-    global REPORTDIR, RRDSDIR
-
     #Mount Point Used Percentage
     mount_files = [f for f in os.listdir(RRDSDIR) if re.match('^mount-\w*\.rrd', f)] 
     cmdList = [REPORTDIR + '/mountPointPercent' + period + '.png', '--start', period,
@@ -127,12 +118,12 @@ def DiskInfo(period):
         rrdtool.graph(cmdList)
     
     #Disk I/O
-    hdd_files = [f for f in os.listdir(RRDSDIR) if re.match('^HD-\w*\.rrd', f)] 
+    hdd_files = [f for f in os.listdir(RRDSDIR) if re.match('^hdd-\w*\.rrd', f)] 
     
     for disk in hdd_files:
         rrdfile = RRDSDIR + '/' + disk
-        disk_name = disk.replace('HD-','').replace('.rrd','')
-        pngfile = REPORTDIR + '/disk-' + disk_name + period + '.png'
+        disk_name = disk.replace('hdd-','').replace('.rrd','')
+        pngfile = REPORTDIR + '/hdd-' + disk_name + period + '.png'
         cmdList = [pngfile, '--start', period, '-w', gWidth, '-h', gHeight,
                 '--title', disk_name + ' I/O (Bytes)', 
                 'DEF:rbytes=' + rrdfile + ':rbytes:AVERAGE',
@@ -155,7 +146,7 @@ def NetInfo(period):
     for net in net_files:
         rrdfile = RRDSDIR + '/' + net
         net_name = net.replace('interface-','').replace('.rrd','')
-        pngfile = REPORTDIR + '/net-' + net_name + period + '.png'
+        pngfile = REPORTDIR + '/interface-' + net_name + period + '.png'
         cmdList = [pngfile, '--start', period, '-w', gWidth, '-h', gHeight,
                 '--title', net_name + ' I/O (Bytes)', 
                 'DEF:recv=' + rrdfile + ':recv:AVERAGE',

@@ -158,41 +158,41 @@ rrdtool graph $REPORTPATH/net-ppp0$PERIOD.png --start $PERIOD \
     AREA:send$cBLUE:"Send":STACK \
 
 #Disk IO
-rrdtool graph $REPORTPATH/HD-mmcblk0$PERIOD.png --start $PERIOD \
+rrdtool graph $REPORTPATH/hdd-mmcblk0$PERIOD.png --start $PERIOD \
     --title "mmcblk0 IO (bytes)" \
     -w $gWidth -h $gHeight \
-    DEF:rbytes=$RRDPATH/HD-mmcblk0.rrd:rbytes:AVERAGE \
-    DEF:wbytes=$RRDPATH/HD-mmcblk0.rrd:wbytes:AVERAGE \
+    DEF:rbytes=$RRDPATH/hdd-mmcblk0.rrd:rbytes:AVERAGE \
+    DEF:wbytes=$RRDPATH/hdd-mmcblk0.rrd:wbytes:AVERAGE \
     COMMENT:" " \
     LINE1:rbytes$cGREEN:"Read" \
     LINE2:wbytes$cBLUE:"Write"
 
 #Disk IO
-rrdtool graph $REPORTPATH/HD-sda1$PERIOD.png --start $PERIOD \
+rrdtool graph $REPORTPATH/hdd-sda1$PERIOD.png --start $PERIOD \
     --title "sda1 IO (bytes)" \
     -w $gWidth -h $gHeight \
-    DEF:rbytes=$RRDPATH/HD-sda1.rrd:rbytes:AVERAGE \
-    DEF:wbytes=$RRDPATH/HD-sda1.rrd:wbytes:AVERAGE \
+    DEF:rbytes=$RRDPATH/hdd-sda1.rrd:rbytes:AVERAGE \
+    DEF:wbytes=$RRDPATH/hdd-sda1.rrd:wbytes:AVERAGE \
     COMMENT:" " \
     LINE1:rbytes$cGREEN:"Read" \
     LINE2:wbytes$cBLUE:"Write"
 
 ##Disk IO
-#rrdtool graph $REPORTPATH/HD-mmcblk0p1$PERIOD.png --start $PERIOD \
+#rrdtool graph $REPORTPATH/hdd-mmcblk0p1$PERIOD.png --start $PERIOD \
 #    --title "mmcblk0p1 IO (bytes)" \
 #    -w $gWidth -h $gHeight \
-#    DEF:rbytes=$RRDPATH/HD-mmcblk0p1.rrd:rbytes:AVERAGE \
-#    DEF:wbytes=$RRDPATH/HD-mmcblk0p1.rrd:wbytes:AVERAGE \
+#    DEF:rbytes=$RRDPATH/hdd-mmcblk0p1.rrd:rbytes:AVERAGE \
+#    DEF:wbytes=$RRDPATH/hdd-mmcblk0p1.rrd:wbytes:AVERAGE \
 #    COMMENT:" " \
 #    LINE1:rbytes$cGREEN:"Read" \
 #    LINE2:wbytes$cBLUE:"Write"
 
 ##Disk IO
-#rrdtool graph $REPORTPATH/HD-mmcblk0p2$PERIOD.png --start $PERIOD \
+#rrdtool graph $REPORTPATH/hdd-mmcblk0p2$PERIOD.png --start $PERIOD \
 #    --title "mmcblk0p2 IO (bytes)" \
 #    -w $gWidth -h $gHeight \
-#    DEF:rbytes=$RRDPATH/HD-mmcblk0p2.rrd:rbytes:AVERAGE \
-#    DEF:wbytes=$RRDPATH/HD-mmcblk0p2.rrd:wbytes:AVERAGE \
+#    DEF:rbytes=$RRDPATH/hdd-mmcblk0p2.rrd:rbytes:AVERAGE \
+#    DEF:wbytes=$RRDPATH/hdd-mmcblk0p2.rrd:wbytes:AVERAGE \
 #    COMMENT:" " \
 #    LINE1:rbytes$cGREEN:"Read" \
 #    LINE2:wbytes$cBLUE:"Write"

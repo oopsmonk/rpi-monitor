@@ -49,7 +49,6 @@ def floatFormat(num):
 #    return True
 
 def updateCPURRD(ctemp, cusage, pids):
-    global CpuRRDFile 
     if not os.path.exists(CpuRRDFile):
         ret = rrdtool.create(CpuRRDFile, '--step', '300',
                 'DS:cputemp:GAUGE:600:30:100',
@@ -74,7 +73,6 @@ def updateCPURRD(ctemp, cusage, pids):
     return True
 
 def updateMemRRD(total, used, buf, cached, free):
-    global MemRRDFile 
     if not os.path.exists(MemRRDFile):
         ret = rrdtool.create(MemRRDFile, '--step', '300',
                 'DS:total:GAUGE:600:0:U',
@@ -98,7 +96,6 @@ def updateMemRRD(total, used, buf, cached, free):
     return True
 
 def updatePartitionRRD(index, total, used, free, percent):
-    global RRDSDIR
     MountRRDFile = RRDSDIR +'/' +'mount-%s.rrd' % (index)
     if not os.path.exists(MountRRDFile):
         ret = rrdtool.create(MountRRDFile, '--step', '300',
@@ -122,7 +119,6 @@ def updatePartitionRRD(index, total, used, free, percent):
     return True
 
 def updateNetRRD(net, send, recv):
-    global RRDSDIR
     NetRRDFile = RRDSDIR + '/' + 'interface-%s.rrd' % (net)
     if not os.path.exists(NetRRDFile):
         ret = rrdtool.create(NetRRDFile, '--step', '300',
@@ -145,8 +141,7 @@ def updateNetRRD(net, send, recv):
 
 def updateDiskRRD(name, rcount, wcount, rbytes, wbytes,
         rtime, wtime):
-    global RRDSDIR
-    DiskRRDFile = RRDSDIR +'/' +'HD-%s.rrd' % (name)
+    DiskRRDFile = RRDSDIR +'/' +'hdd-%s.rrd' % (name)
     if not os.path.exists(DiskRRDFile):
         ret = rrdtool.create(DiskRRDFile, '--step', '300',
                 'DS:rcount:DERIVE:600:0:U',
@@ -186,7 +181,7 @@ def get_cpu_temp():
 #    return float(gpu_temp)
     
 def get_cpuInfo():
-    time.sleep(2)
+    time.sleep(3)
     cpuUsage = psutil.cpu_percent()
     cTemp = get_cpu_temp()
     pids = psutil.pids()
