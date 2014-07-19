@@ -61,7 +61,11 @@ rrdtool graph $REPORTPATH/pids$PERIOD.png --start $PERIOD \
     --lower-limit 0 \
     DEF:pids=$RRDPATH/cpustatus.rrd:pids:AVERAGE \
     COMMENT:" " \
-    LINE2:pids$cGREEN:"PIDs"
+    LINE1:pids$cGREEN:"PIDs" \
+    GPRINT:pids:AVERAGE:"Avg \: %3.0lf" \
+    GPRINT:pids:MIN:"Min\: %3.0lf" \
+    GPRINT:pids:MAX:"Max \: %3.0lf"
+
 
 #Memoery
 rrdtool graph $REPORTPATH/memInfo$PERIOD.png --start $PERIOD \
@@ -110,9 +114,11 @@ rrdtool graph $REPORTPATH/mount-usage$PERIOD.png --start $PERIOD \
     --lower-limit 0 --upper-limit 100 \
     DEF:d1=$RRDPATH/mount-root.rrd:percent:AVERAGE \
     DEF:d2=$RRDPATH/mount-boot.rrd:percent:AVERAGE \
+    DEF:d3=$RRDPATH/mount-home.rrd:percent:AVERAGE \
     COMMENT:"Mount Point" \
     LINE1:d1$cBROWN:"Root" \
-    LINE2:d2$cGREEN:"Boot"
+    LINE2:d2$cGREEN:"Boot" \
+    LINE3:d3$cBLUE:"Home"
 
 
 #Eth0 I/O Bytes 
@@ -129,12 +135,44 @@ rrdtool graph $REPORTPATH/net-eth0$PERIOD.png --start $PERIOD \
 #    AREA:send$cRED:"Send_bytes":STACK \
 #    LINE2:recv$cGREEN:"Recv_bytes"
 
+#Eth1 I/O Bytes 
+rrdtool graph $REPORTPATH/net-eth1$PERIOD.png --start $PERIOD \
+    --title "Internet I/O Bytes" \
+    --vertical-label="Bytes/s" \
+    -w $gWidth -h $gHeight \
+    DEF:send=$RRDPATH/interface-eth1.rrd:send:AVERAGE \
+    DEF:recv=$RRDPATH/interface-eth1.rrd:recv:AVERAGE \
+    COMMENT:" " \
+    AREA:recv$cGREEN:"Recv":STACK \
+    AREA:send$cBLUE:"Send":STACK \
+
+#ppp0 I/O Bytes 
+rrdtool graph $REPORTPATH/net-ppp0$PERIOD.png --start $PERIOD \
+    --title "Internet I/O Bytes" \
+    --vertical-label="Bytes/s" \
+    -w $gWidth -h $gHeight \
+    DEF:send=$RRDPATH/interface-ppp0.rrd:send:AVERAGE \
+    DEF:recv=$RRDPATH/interface-ppp0.rrd:recv:AVERAGE \
+    COMMENT:" " \
+    AREA:recv$cGREEN:"Recv":STACK \
+    AREA:send$cBLUE:"Send":STACK \
+
 #Disk IO
 rrdtool graph $REPORTPATH/HD-mmcblk0$PERIOD.png --start $PERIOD \
     --title "mmcblk0 IO (bytes)" \
     -w $gWidth -h $gHeight \
     DEF:rbytes=$RRDPATH/HD-mmcblk0.rrd:rbytes:AVERAGE \
     DEF:wbytes=$RRDPATH/HD-mmcblk0.rrd:wbytes:AVERAGE \
+    COMMENT:" " \
+    LINE1:rbytes$cGREEN:"Read" \
+    LINE2:wbytes$cBLUE:"Write"
+
+#Disk IO
+rrdtool graph $REPORTPATH/HD-sda1$PERIOD.png --start $PERIOD \
+    --title "sda1 IO (bytes)" \
+    -w $gWidth -h $gHeight \
+    DEF:rbytes=$RRDPATH/HD-sda1.rrd:rbytes:AVERAGE \
+    DEF:wbytes=$RRDPATH/HD-sda1.rrd:wbytes:AVERAGE \
     COMMENT:" " \
     LINE1:rbytes$cGREEN:"Read" \
     LINE2:wbytes$cBLUE:"Write"

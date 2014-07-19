@@ -57,10 +57,10 @@ def updateCPURRD(ctemp, cusage, pids):
                 'DS:pids:GAUGE:600:0:U',
                 'RRA:AVERAGE:0.5:1:228',
                 'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744',
-                'RRA:MAX:0.5:1:228',
-                'RRA:MAX:0.5:3:672',
-                'RRA:MAX:0.5:12:744')
+                'RRA:AVERAGE:0.5:12:744')
+#                'RRA:MAX:0.5:1:228',
+#                'RRA:MAX:0.5:3:672',
+#                'RRA:MAX:0.5:12:744')
         if ret:
             print rrdtool.error()
             return False
@@ -84,10 +84,8 @@ def updateMemRRD(total, used, buf, cached, free):
                 'DS:free:GAUGE:600:0:U',
                 'RRA:AVERAGE:0.5:1:228',
                 'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744',
-                'RRA:MAX:0.5:1:228',
-                'RRA:MAX:0.5:3:672',
-                'RRA:MAX:0.5:12:744')
+                'RRA:AVERAGE:0.5:12:744')
+
         if ret:
             print rrdtool.error()
             return False
@@ -110,10 +108,8 @@ def updatePartitionRRD(index, total, used, free, percent):
                 'DS:percent:GAUGE:600:0:100',
                 'RRA:AVERAGE:0.5:1:228',
                 'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744',
-                'RRA:MAX:0.5:1:228',
-                'RRA:MAX:0.5:3:672',
-                'RRA:MAX:0.5:12:744')
+                'RRA:AVERAGE:0.5:12:744')
+
         if ret:
             print rrdtool.error()
             return False
@@ -134,10 +130,8 @@ def updateNetRRD(net, send, recv):
                 'DS:recv:DERIVE:600:0:U',
                 'RRA:AVERAGE:0.5:1:228',
                 'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744',
-                'RRA:MAX:0.5:1:228',
-                'RRA:MAX:0.5:3:672',
-                'RRA:MAX:0.5:12:744')
+                'RRA:AVERAGE:0.5:12:744')
+
         if ret:
             print rrdtool.error()
             return False
@@ -163,10 +157,8 @@ def updateDiskRRD(name, rcount, wcount, rbytes, wbytes,
                 'DS:wtime:DERIVE:600:0:U',
                 'RRA:AVERAGE:0.5:1:228',
                 'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744',
-                'RRA:MAX:0.5:1:228',
-                'RRA:MAX:0.5:3:672',
-                'RRA:MAX:0.5:12:744')
+                'RRA:AVERAGE:0.5:12:744')
+
         if ret:
             print rrdtool.error()
             return False
