@@ -7,7 +7,7 @@ Raspberry Pi Status Monitor
 
 ###Install  
 
-    sudo apt-get install libcairo2-dev libpango1.0-dev libglib2.0-dev libxml2-dev librrd-dev python-2.7-dev rrdtool python-rrdtool  
+    sudo apt-get install libcairo2-dev libpango1.0-dev libglib2.0-dev libxml2-dev librrd-dev python2.7-dev rrdtool python-rrdtool  
     wget https://pypi.python.org/packages/source/p/psutil/psutil-2.1.1.tar.gz  
     tar xf psutil-2.1.1.tar.gz  
     cd psutil-2.1.1  
