@@ -165,10 +165,15 @@ def updateDiskRRD(name, rcount, wcount, rbytes, wbytes,
     return True
     
 def get_cpu_temp():
-    tf = open('/sys/class/thermal/thermal_zone0/temp')
-    cpu_temp = tf.read()
-    tf.close()
-    return float(cpu_temp)/1000
+
+    tempfile = '/sys/class/thermal/thermal_zone0/temp'
+    if os.path.exists(tempfile):
+        tf = open(tempfile)
+        cpu_temp = tf.read()
+        tf.close()
+        return float(cpu_temp)/1000
+    else:
+        return 0
 
 #def get_gpu_temp():
 #    #cmd = subprocess.Popen(['sudo /opt/vc/bin/vcgencmd measure_temp'], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
