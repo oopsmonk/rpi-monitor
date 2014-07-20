@@ -3,15 +3,13 @@ import rrdtool
 from rrdtool import update as rrd_update
 import os, time 
 import subprocess, psutil
-RUNDIR = '/home/oopsmonk/rpi-monitor'
+
+RUNDIR = os.path.dirname(os.path.realpath(__file__))
 RRDSDIR = RUNDIR + '/rrds'
 CpuRRDFile = RRDSDIR + '/cpustatus.rrd'
 MemRRDFile = RRDSDIR + '/meminfo.rrd'
 
 '''
-http://www.vandenbogaerdt.nl/rrdtool/tutorial/rrdcreate.php
-http://stackoverflow.com/questions/15774423/how-set-rrd-to-store-for-2-years
-
 1 day - 5-minute resolution
 1 week - 15-minute resolution
 1 month - 1-hour resolution
@@ -251,9 +249,6 @@ def get_diskInfo():
 def test():
     print 'test....'
     get_netInfo()
-
-def usage():
-    print "usage:   " 
 
 def main():
 

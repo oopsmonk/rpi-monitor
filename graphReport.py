@@ -2,7 +2,7 @@
 import sys, re, os
 import rrdtool
 
-RUNDIR = '/home/oopsmonk/rpi-monitor'
+RUNDIR = os.path.dirname(os.path.realpath(__file__))
 RRDSDIR = RUNDIR + '/rrds'
 REPORTDIR = RUNDIR + '/report'
 MemRRDFile = RRDSDIR + '/meminfo.rrd'
