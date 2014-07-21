@@ -13,6 +13,7 @@ cGREEN='#00FF00'
 cBLUE='#0000FF'
 cBROWN='#842B00'
 cPINK='#FF00FF'
+cTrans='#0000FF80'
 cList=[cRED, cGREEN, cBLUE, cBROWN, cPINK]
 KB=1024
 MB=KB*1024
@@ -65,7 +66,7 @@ def MemoryInfo(period):
         'DEF:cached=' + MemRRDFile + ':cached:AVERAGE',
         'DEF:free=' + MemRRDFile + ':free:AVERAGE',
         'CDEF:usedMB=used,' + str(MB) + ',/',
-        'AREA:used' + cBLUE + ':Used:STACK',
+        'AREA:used' + cBLUE + ':Used',
         'LINE1:total' + cRED + ':Total',
         'LINE2:free' + cGREEN + ':Free',
         'COMMENT:\\n',
@@ -107,7 +108,7 @@ def DiskInfo(period):
                 'DEF:used=' + rrdfile + ':used:AVERAGE',
                 'DEF:free=' + rrdfile + ':free:AVERAGE',
                 'CDEF:usedGB=used,' + str(GB) + ',/',
-                'AREA:used' + cGREEN + ':Used:STACK',
+                'AREA:used' + cGREEN + ':Used',
                 'LINE1:total' + cRED + ':Total',
                 'LINE1:free' + cBLUE + ':Free',
                 'COMMENT:\\n',
@@ -130,7 +131,7 @@ def DiskInfo(period):
                 'DEF:wbytes=' + rrdfile + ':wbytes:AVERAGE',
                 'CDEF:rKB=rbytes,' + str(KB) + ',/',
                 'CDEF:wKB=wbytes,' + str(KB) + ',/',
-                'AREA:rbytes' + cGREEN + ':Read:STACK',
+                'AREA:rbytes' + cGREEN + ':Read',
                 'GPRINT:rKB:AVERAGE:Avg %0.2lf%S(KB)',
                 'GPRINT:rKB:MAX:Max %0.2lf%S(KB)',
                 'COMMENT:\\n',
@@ -153,11 +154,11 @@ def NetInfo(period):
                 'DEF:send=' + rrdfile + ':send:AVERAGE',
                 'CDEF:recvKB=recv,' + str(KB) + ',/',
                 'CDEF:sendKB=send,' + str(KB) + ',/',
-                'AREA:recv' + cGREEN + ':Read:STACK',
+                'AREA:recv' + cGREEN + ':Recev',
                 'GPRINT:recvKB:AVERAGE:Avg %0.2lf%S(KB)',
                 'GPRINT:recvKB:MAX:Max %0.2lf%S(KB)',
                 'COMMENT:\\n',
-                'AREA:send' + cBLUE + ':Write:STACK',
+                'AREA:send' + cTrans+ ':Send',
                 'GPRINT:sendKB:AVERAGE:Avg %0.2lf%S(KB)',
                 'GPRINT:sendKB:MAX:Max %0.2lf%S(KB)',
                 'COMMENT:\\n']
