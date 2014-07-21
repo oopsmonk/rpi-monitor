@@ -18,8 +18,8 @@ KB=1024
 MB=KB*1024
 GB=MB*1024
 
-gWidth='800'
-gHeight='400'
+gWidth='600'
+gHeight='200'
 
 def CpuInfo(period):
     #Temp
