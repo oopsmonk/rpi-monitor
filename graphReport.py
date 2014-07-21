@@ -45,7 +45,7 @@ def CpuInfo(period):
     #PID
     rrdtool.graph(REPORTDIR + '/PIDs' + period + '.png', '--start', period,
         '--title', 'PIDs', '-w', gWidth, '-h', gHeight, 
-        '--lower-limit', '0', 
+        '--lower-limit', '40', 
         'DEF:cpid=' + CpuRRDFile + ':pids:AVERAGE', 
         'LINE1:cpid' + cBLUE,
         'COMMENT: ',
