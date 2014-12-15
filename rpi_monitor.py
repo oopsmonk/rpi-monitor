@@ -2,12 +2,13 @@
 import rrdtool
 from rrdtool import update as rrd_update
 import os, time 
-import subprocess, psutil
+import psutil
 
 RUNDIR = os.path.dirname(os.path.realpath(__file__))
 RRDSDIR = RUNDIR + '/rrds'
 CpuRRDFile = RRDSDIR + '/cpustatus.rrd'
 MemRRDFile = RRDSDIR + '/meminfo.rrd'
+UptimeRRDFile = RRDSDIR + '/uptime.rrd'
 
 '''
 1 day - 5-minute resolution
@@ -19,6 +20,15 @@ RRA:AVERAGE:0.5:1:288
 RRA:AVERAGE:0.5:3:672
 RRA:AVERAGE:0.5:12:744
 RRA:AVERAGE:0.5:72:1480
+
+5-minute for 3 days
+RRA:AVERAGE:0.5:1:864
+15-minute for 2 weeks
+RRA:AVERAGE:0.5:3:1344
+1-hour for 2 months
+RRA:AVERAGE:0.5:12:1488
+3-hour for 1 year
+RRA:AVERAGE:0.5:36:2960
 '''
 
 def floatFormat(num):
@@ -49,12 +59,13 @@ def floatFormat(num):
 def updateCPURRD(ctemp, cusage, pids):
     if not os.path.exists(CpuRRDFile):
         ret = rrdtool.create(CpuRRDFile, '--step', '300',
-                'DS:cputemp:GAUGE:600:30:100',
+                'DS:cputemp:GAUGE:600:0:100',
                 'DS:cpuUsage:GAUGE:600:0:100',
                 'DS:pids:GAUGE:600:0:U',
-                'RRA:AVERAGE:0.5:1:228',
-                'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744')
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
 #                'RRA:MAX:0.5:1:228',
 #                'RRA:MAX:0.5:3:672',
 #                'RRA:MAX:0.5:12:744')
@@ -70,6 +81,26 @@ def updateCPURRD(ctemp, cusage, pids):
 
     return True
 
+def updateUptimeRRD(uptime):
+    if not os.path.exists(UptimeRRDFile):
+        ret = rrdtool.create(UptimeRRDFile, '--step', '300',
+                'DS:uptime:GAUGE:600:0:U',
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
+        if ret:
+            print rrdtool.error()
+            return False
+
+    #update data
+    ret = rrd_update(UptimeRRDFile, 'N:%s' %(uptime));
+    if ret:
+        print rrdtool.error()
+        return False
+
+    return True
+
 def updateMemRRD(total, used, buf, cached, free):
     if not os.path.exists(MemRRDFile):
         ret = rrdtool.create(MemRRDFile, '--step', '300',
@@ -78,9 +109,13 @@ def updateMemRRD(total, used, buf, cached, free):
                 'DS:buf:GAUGE:600:0:U',
                 'DS:cached:GAUGE:600:0:U',
                 'DS:free:GAUGE:600:0:U',
-                'RRA:AVERAGE:0.5:1:228',
-                'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744')
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
+                #'RRA:AVERAGE:0.5:1:228',
+                #'RRA:AVERAGE:0.5:3:672',
+                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -101,9 +136,13 @@ def updatePartitionRRD(index, total, used, free, percent):
                 'DS:used:GAUGE:600:0:U',
                 'DS:free:GAUGE:600:0:U',
                 'DS:percent:GAUGE:600:0:100',
-                'RRA:AVERAGE:0.5:1:228',
-                'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744')
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
+                #'RRA:AVERAGE:0.5:1:228',
+                #'RRA:AVERAGE:0.5:3:672',
+                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -122,9 +161,13 @@ def updateNetRRD(net, send, recv):
         ret = rrdtool.create(NetRRDFile, '--step', '300',
                 'DS:send:DERIVE:600:0:U',
                 'DS:recv:DERIVE:600:0:U',
-                'RRA:AVERAGE:0.5:1:228',
-                'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744')
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
+                #'RRA:AVERAGE:0.5:1:228',
+                #'RRA:AVERAGE:0.5:3:672',
+                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -148,9 +191,13 @@ def updateDiskRRD(name, rcount, wcount, rbytes, wbytes,
                 'DS:wbytes:DERIVE:600:0:U',
                 'DS:rtime:DERIVE:600:0:U',
                 'DS:wtime:DERIVE:600:0:U',
-                'RRA:AVERAGE:0.5:1:228',
-                'RRA:AVERAGE:0.5:3:672',
-                'RRA:AVERAGE:0.5:12:744')
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
+                #'RRA:AVERAGE:0.5:1:228',
+                #'RRA:AVERAGE:0.5:3:672',
+                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -191,6 +238,10 @@ def get_cpuInfo():
 #    gTemp = get_gpu_temp()
 #    if updateCPURRD(cTemp, gTemp, cpuUsage) == False:
     if updateCPURRD(cTemp,  cpuUsage, len(pids)) == False:
+        return False
+
+    uptime = int(time.time() - psutil.boot_time())/60 #uptime in minutes
+    if updateUptimeRRD(uptime) == False:
         return False
 
     return True
@@ -242,7 +293,6 @@ def get_netInfo():
 def get_diskInfo():
     disks = psutil.disk_io_counters(perdisk=True)
 
-    index = ""
     for dname in disks.keys():
         diskio = disks.get(dname)
         #sdiskio(read_count=9837, write_count=43761, read_bytes=198268416, write_bytes=933855232, read_time=87870, write_time=35913990)

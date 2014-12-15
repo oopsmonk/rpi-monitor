@@ -7,6 +7,7 @@ RRDSDIR = RUNDIR + '/rrds'
 REPORTDIR = RUNDIR + '/report'
 MemRRDFile = RRDSDIR + '/meminfo.rrd'
 CpuRRDFile = RRDSDIR + '/cpustatus.rrd'
+UptimeRRDFile = RRDSDIR + '/uptime.rrd'
 
 cRED='#FF0000'
 cGREEN='#00FF00'
@@ -55,6 +56,16 @@ def CpuInfo(period):
         'GPRINT:cpid:MIN:Min\\:%2.0lf',
         'COMMENT:\\n')
 
+def UptimeInfo(period):
+    #Temp
+    rrdtool.graph(REPORTDIR + '/uptime' + period + '.png', '--start', period,
+        '--title', 'System Uptime', '-w', gWidth, '-h', gHeight, 
+        'DEF:cuptime=' + UptimeRRDFile + ':uptime:AVERAGE', 
+        'LINE1:cuptime' + cGREEN,
+        'GPRINT:cuptime:AVERAGE:Avg\\:%2.0lf',
+        'GPRINT:cuptime:MAX:Max\\:%2.0lf',
+        'GPRINT:cuptime:MIN:Min\\:%2.0lf',
+        'COMMENT:\\n')
 
 def MemoryInfo(period):
     #Memory Usage
@@ -181,6 +192,7 @@ def main():
         sys.exit(1)
 
     CpuInfo(p)
+    UptimeInfo(p)
     MemoryInfo(p)
     DiskInfo(p)
     NetInfo(p)
