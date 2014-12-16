@@ -17,7 +17,10 @@ Raspberry Pi Status Monitor
 By defualt, the `cron.log` is disabled in [Raspbian](http://www.raspbian.org/).  
 To enable it:  
 
-    sudo vi /etc/rsyslog.conf
+    #Ubuntu 14.04
+    $sudo vi /etc/rsyslog.d/50-default.conf
+    #Raspberry Pi
+    $sudo vi /etc/rsyslog.conf
 
 find the line and uncomment it.  
 
