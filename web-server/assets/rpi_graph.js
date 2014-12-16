@@ -4,13 +4,13 @@ function draw_cpu() {
     fname="data/cpustatus.rrd";
 
     var gtype_format={'cputemp':{ title: 'Temperature', label:'Temp',color: "#00f800", checked:true},
-        'cpuUsage':{title: 'Usage', label:'Usage', color: "#c00000"},
+        'cpuUsage':{title: 'Usage', label:'Usage', color: "#c00000", checked:true },
         'pids':{title: 'Processes', label:'Processes', color: "#000000"}};
 
     var graph_options = {tooltipOpts: { content: function(label, xval, yval){
             var diff = new Date();
             var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
-            return "<h5>%s</h5> Value: %y.2<br>" + dataX.toLocaleString(); 
+            return "<strong>%s</strong> %y.2<br>" + dataX.toLocaleString(); 
             }
         }};
     //var f=new rrdFlotAsync("graphCPU",fname,null,null,gtype_format);
@@ -34,16 +34,24 @@ function draw_mem() {
         'free':{title: 'Free Memory', label:'Free', color: "#c00000"}};
     
     var graph_options = {tooltipOpts: { content: function(label, xval, yval){
-            var dataY = yval/1024/1024 ;
-            var diff = new Date();
-            var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
-            return "<h5>%s</h5> Value:" + dataY.toFixed(2) + " MB<br>" + dataX.toLocaleString(); 
+                var diff = new Date();
+                var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
+                if(yval > (1024*1024*1024)){
+                    var dataY = yval/1024/1024/1024;
+                    return "<strong>%s</strong> " + dataY.toFixed(2) + " GB<br>" + dataX.toLocaleString(); 
+                }else if(yval > (1024*1024)){
+                    var dataY = yval/1024/1024;
+                    return "<strong>%s</strong> " + dataY.toFixed(2) + " MB<br>" + dataX.toLocaleString(); 
+                }else{
+                    var dataY = yval/1024;
+                    return "<strong>%s</strong> " + dataY.toFixed(2) + " KB<br>" + dataX.toLocaleString(); 
+                }
             }
         }};
     //var graph_options = {tooltipOpts: { content: function(label, xval, yval){
             //var dataY = yval/1024/1024 ;
             //var dataX = new Date(xval);
-            //return "<h5>%s</h5> Value:" + dataY.toFixed(2) + " MB<br>" + dataX.toLocaleString(); 
+            //return "<strong>%s</strong> Value:" + dataY.toFixed(2) + " MB<br>" + dataX.toLocaleString(); 
             //}
         //}};
 
@@ -51,6 +59,36 @@ function draw_mem() {
     var f=new rrdFlotAsync("graphMem",fname,null,graph_options,gtype_format,null,ds_op_list,null);
 
     //var f=new rrdFlotAsync("graphMem",fname,null,null,gtype_format);
+}
+
+function draw_uptime() {
+
+    fname="data/uptime.rrd";
+
+    var gtype_format={'uptime':{ title: 'System Uptime (minutes)', label:'Uptime',color: "#00f800", checked:true}};
+
+    var graph_options = {tooltipOpts: { content: function(label, xval, yval){
+        var diff = new Date();
+        var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
+        var days = Math.floor(yval/60/24);
+        var hours = Math.floor(yval/60)%24;
+        if(hours < 10){
+            hours = "0" + hours;
+        }
+        var mins = Math.floor(yval%60);
+
+        if(days){
+            if(days > 1)
+                return "<strong>%s</strong> " + days + " days, " + hours + ":" + mins + "<br>" + dataX.toLocaleString();
+            else
+                return "<strong>%s</strong> " + days + " day, " + hours + ":" + mins + "<br>" + dataX.toLocaleString();
+        }else{
+            return "<strong>%s</strong> " + hours + ":" + mins + "<br>" + dataX.toLocaleString();
+        }
+    }
+    }};
+    var f=new rrdFlotAsync("graphUptime",fname,null,graph_options,gtype_format );
+
 }
 
 function draw_eth0() {
@@ -65,15 +103,9 @@ function draw_eth0() {
             var dataY = yval/1024 ;
             var diff = new Date();
             var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
-            return "<h5>%s</h5> Value:" + dataY.toFixed(2) + " KB<br>" + dataX.toLocaleString(); 
+            return "<strong>%s</strong> " + dataY.toFixed(2) + " KB<br>" + dataX.toLocaleString(); 
             }
         }};
-    //var graph_options = {tooltipOpts: { content: function(label, xval, yval){
-            //var dataY = yval/1024 ;
-            //var dataX = new Date(xval);
-            //return "<h5>%s</h5> Value:" + dataY.toFixed(2) + " KB<br>" + dataX.toLocaleString(); 
-            //}
-        //}};
 
     //var ds_op_list=['total','used','free','buf', 'cached'];
     //var f=new rrdFlotAsync("graphEth0",fname,null,graph_options,gtype_format,null,ds_op_list,null);
@@ -94,7 +126,7 @@ function draw_eth1() {
             var dataY = yval/1024 ;
             var diff = new Date();
             var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
-            return "<h5>%s</h5> Value:" + dataY.toFixed(2) + " KB<br>" + dataX.toLocaleString(); 
+            return "<strong>%s</strong> " + dataY.toFixed(2) + " KB<br>" + dataX.toLocaleString(); 
             }
         }};
 

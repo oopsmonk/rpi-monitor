@@ -66,9 +66,6 @@ def updateCPURRD(ctemp, cusage, pids):
                 'RRA:AVERAGE:0.5:3:1344',
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
-#                'RRA:MAX:0.5:1:228',
-#                'RRA:MAX:0.5:3:672',
-#                'RRA:MAX:0.5:12:744')
         if ret:
             print rrdtool.error()
             return False
@@ -85,10 +82,10 @@ def updateUptimeRRD(uptime):
     if not os.path.exists(UptimeRRDFile):
         ret = rrdtool.create(UptimeRRDFile, '--step', '300',
                 'DS:uptime:GAUGE:600:0:U',
-                'RRA:AVERAGE:0.5:1:864',
-                'RRA:AVERAGE:0.5:3:1344',
-                'RRA:AVERAGE:0.5:12:1488',
-                'RRA:AVERAGE:0.5:36:2960')
+                'RRA:LAST:0.5:1:864',
+                'RRA:LAST:0.5:3:1344',
+                'RRA:LAST:0.5:12:1488',
+                'RRA:LAST:0.5:36:2960')
         if ret:
             print rrdtool.error()
             return False
@@ -113,9 +110,6 @@ def updateMemRRD(total, used, buf, cached, free):
                 'RRA:AVERAGE:0.5:3:1344',
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
-                #'RRA:AVERAGE:0.5:1:228',
-                #'RRA:AVERAGE:0.5:3:672',
-                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -140,9 +134,6 @@ def updatePartitionRRD(index, total, used, free, percent):
                 'RRA:AVERAGE:0.5:3:1344',
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
-                #'RRA:AVERAGE:0.5:1:228',
-                #'RRA:AVERAGE:0.5:3:672',
-                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -165,9 +156,6 @@ def updateNetRRD(net, send, recv):
                 'RRA:AVERAGE:0.5:3:1344',
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
-                #'RRA:AVERAGE:0.5:1:228',
-                #'RRA:AVERAGE:0.5:3:672',
-                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()
@@ -195,9 +183,6 @@ def updateDiskRRD(name, rcount, wcount, rbytes, wbytes,
                 'RRA:AVERAGE:0.5:3:1344',
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
-                #'RRA:AVERAGE:0.5:1:228',
-                #'RRA:AVERAGE:0.5:3:672',
-                #'RRA:AVERAGE:0.5:12:744')
 
         if ret:
             print rrdtool.error()

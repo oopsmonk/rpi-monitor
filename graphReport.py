@@ -57,14 +57,12 @@ def CpuInfo(period):
         'COMMENT:\\n')
 
 def UptimeInfo(period):
-    #Temp
+    #uptime
     rrdtool.graph(REPORTDIR + '/uptime' + period + '.png', '--start', period,
         '--title', 'System Uptime', '-w', gWidth, '-h', gHeight, 
-        'DEF:cuptime=' + UptimeRRDFile + ':uptime:AVERAGE', 
+        'DEF:cuptime=' + UptimeRRDFile + ':uptime:LAST', 
         'LINE1:cuptime' + cGREEN,
-        'GPRINT:cuptime:AVERAGE:Avg\\:%2.0lf',
-        'GPRINT:cuptime:MAX:Max\\:%2.0lf',
-        'GPRINT:cuptime:MIN:Min\\:%2.0lf',
+        'GPRINT:cuptime:LAST:Uptime(minutes)\\:%2.0lf',
         'COMMENT:\\n')
 
 def MemoryInfo(period):
