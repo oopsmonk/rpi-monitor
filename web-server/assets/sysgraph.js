@@ -6,14 +6,15 @@ $(document).ready(function(){
 
     function draw_cpu(tag_id, rrd_file) {
 
-        var gtype_format={'cputemp':{ title: 'Temperature', label:'Temp',color: "#ff9500", checked:true, lines:{
+        var gtype_format={'cputemp':{ title: 'Temperature', label:'Temp',color: "#ff8000", checked:true, lines:{
                 show: true, fill: true, fillColor:{
-                    colors:['#fe0','#f50']}
+                    //colors:['#fe0','#f50']}
+                    colors:[{opacity:0.3},{opacity:1}]}
                 }
             },
-            'cpuUsage':{title: 'Usage', label:'Usage', color: "#0000ff", checked:true, lines:{
+            'cpuUsage':{title: 'Usage', label:'Usage', color: "#0050ff", checked:true, lines:{
                 show: true, fill: true, fillColor:{
-                    colors:[{opacity:0.3},{opacity:0.7}]}
+                    colors:[{opacity:0.5},{opacity:0.9}]}
                 }
             },
             'pids':{title: 'Processes', label:'Processes', color: "#c00000"}};
