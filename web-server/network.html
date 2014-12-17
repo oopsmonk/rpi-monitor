@@ -17,7 +17,8 @@
     <!--<script src="assets/javascriptrrd.wlibs.js"></script>-->
     <script src="assets/javascriptrrd.wlibs.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/rpi_graph.js"></script>
+    <!--<script src="assets/rpi_graph.js"></script>-->
+    <script src="assets/netgraph.js"></script>
   </head>
 
   <body>
@@ -43,25 +44,15 @@
       </div>
     </nav>
 
-    <div class="container">
-        <h1>eth1</h1>
-        <div id="graphEth1"></div>
-        <h1>eth0</h1>
-        <div id="graphEth0"></div>
-      <!--<div class="starter-template">-->
-        <!--<h1>Bootstrap starter template</h1>-->
-        <!--<p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>-->
-      <!--</div>-->
-
+    <div class="container" id="id_container">
     </div><!-- /.container -->
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
     <!--<script src="assets/bootstrap/js/bootstrap.min.js"></script>-->
-    <script>draw_eth0();</script>
-    <script>draw_eth1();</script>
+    <!--<script>draw_eth("graphEth1", "data/interface-eth1.rrd", "eth1");</script>-->
+    <!--<script>draw_eth("graphEth2", "data/interface-eth2.rrd", "eth2");</script>-->
   </body>
 </html>
