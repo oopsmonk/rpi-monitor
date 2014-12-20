@@ -18,7 +18,7 @@
     <script src="assets/javascriptrrd.wlibs.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <!--<script src="assets/rpi_graph.js"></script>-->
-    <script src="assets/netgraph.js"></script>
+    <script src="assets/storagegraph.js"></script>
   </head>
 
   <body>
@@ -37,14 +37,16 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="index.html">System</a></li>
-            <li class="active"><a href="#">Network</a></li>
-            <li><a href="storage.html">Storage</a></li>
+            <li><a href="network.html">Network</a></li>
+            <li class="active"><a href="#">Storage</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container" id="id_container">
+        <div id="hdd"></div>
+        <div id="mount_point"></div>
     </div><!-- /.container -->
 
     <!-- Bootstrap core JavaScript

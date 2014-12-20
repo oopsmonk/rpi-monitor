@@ -2,7 +2,7 @@
 
 from bottle import route, static_file, debug, run, get, redirect
 #from bottle import post, request
-import os, inspect
+import os, re, inspect
 import json
 
 #enable bottle debug
@@ -12,12 +12,7 @@ debug(True)
 routePath = '/RpiMonitor'
 # get directory of WebApp (pyWebMOC.py's dir)
 rootPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-
-def getRRDFiles():
-    global rootPath 
-    files = os.listdir(rootPath + "/data")
-    rrdlist = [ f for f in files if f.find("rrd") != -1 ]
-    return rrdlist 
+RRDDIR = rootPath + '/data'
 
 @route(routePath)
 def rootHome():
@@ -46,24 +41,22 @@ def sysRRDFile():
 #get network rrd files
 @get(routePath + '/netrrd')
 def getNetworkRRD():
-    rrdlist = getRRDFiles()
-    print rrdlist  
-    flist = [ rrdf for rrdf in rrdlist if 'interface' in rrdf ]
+    global RRDDIR 
+    flist = [f for f in os.listdir(RRDDIR) if re.match('^interface-\w*\.rrd', f)] 
     print flist 
     return json.dumps({"rrdflies":flist})
     
 #get HDD rrd files
 @get(routePath + '/hddrrd')
 def getHDDRRD():
-    rrdlist = getRRDFiles()
-    flist = [ rrdf for rrdf in rrdlist if "hdd" in rrdf ]
-    return json.dumps({"rrdflies":flist})
+    global RRDDIR 
+    hdd_files = [f for f in os.listdir(RRDDIR) if re.match('^hdd-\w*\.rrd', f)] 
+    return json.dumps({"rrdflies":hdd_files})
 
 #get mount point rrd files
 @get(routePath + '/mountrrd')
 def getMountRRD():
-    rrdlist = getRRDFiles()
-    flist = [ rrdf for rrdf in rrdlist if "mount" in rrdf ]
+    flist = [f for f in os.listdir(RRDDIR) if re.match('^mount-\w*\.rrd', f)] 
     return json.dumps({"rrdflies":flist})
 
 
