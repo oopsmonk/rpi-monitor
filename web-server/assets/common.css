@@ -6,3 +6,10 @@ body {
     padding: 40px 15px;
     text-align: center;
 }
+
+.date-picker-range {
+    background: #fff; 
+    cursor: pointer; 
+    padding: 5px 10px; 
+    border: 1px solid #ccc
+}
