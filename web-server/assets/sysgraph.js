@@ -4,32 +4,55 @@ darw system graphics
 
 $(document).ready(function(){
 
-    function cpu_date(){
+    var mHeight_def = "300px";
+    var mWidth_def = "500px";
+    var sHeight_def = "110px";
+    var sWidth_def = "250px";
+
+    function tzTimeMS(){
+        var tz = new Date();
+        return (tz.getTimezoneOffset() * 60 * 1000);
+    }
+
+    function getRRAID(time_diff){
+        if(time_diff < (3 * 24 * 60 * 60)){ //3 days
+            return 0;
+        }else if(time_diff < (14 * 24 * 60 * 60)){ // 14 days
+            return 1;
+        }else if(time_diff < (62 * 24 * 60 * 60)){ // 2 month
+            return 2;
+        }else{ // 1 year
+            return 3;
+        }
+    }
+
+    function date_picker(picker_id){
         
         var cb = function(start, end, label) {
             console.log(start.toISOString(), end.toISOString(), label);
-            $('#CPUDateRange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $(picker_id + ' span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
         }
 
         var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
+        startDate: moment().subtract(24, 'hour'),
         endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2014',
-        dateLimit: { days: 60 },
+        minDate: moment().subtract(12, 'month'),
+        maxDate: moment(),
+        dateLimit: { years: 1 },
         showDropdowns: true,
         showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
+        timePicker: true,
+        timePickerIncrement: 5,
+        timePicker12Hour: false,
         ranges: {
-           'Today': [moment(), moment()],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+           '24 Hours': [moment().subtract(24, 'hour'), moment()],
+           '3 Days': [moment().subtract(3, 'day'), moment()],
+           '14 Days': [moment().subtract(14, 'day'), moment()],
+           '1 Month': [moment().subtract(1, 'month'), moment()],
+           '2 Month': [moment().subtract(2, 'month'), moment()],
+           '6 Month': [moment().subtract(6, 'month'), moment()],
+           'This Year': [moment().startOf('year'), moment()]
         },
         opens: 'left',
         buttonClasses: ['btn btn-default'],
@@ -49,23 +72,29 @@ $(document).ready(function(){
         }
         };
 
-        $('#CPUDateRange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+        $(picker_id + ' span').html(moment().subtract(24, 'hour').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
 
-        $('#CPUDateRange').daterangepicker(optionSet1, cb);
+        $(picker_id).daterangepicker(optionSet1, cb);
 
-        $('#CPUDateRange').on('show.daterangepicker', function() { console.log("show event fired"); });
-        $('#CPUDateRange').on('hide.daterangepicker', function() { console.log("hide event fired"); });
-        $('#CPUDateRange').on('apply.daterangepicker', function(ev, picker) { 
-        console.log("apply event fired, start/end dates are " 
-          + picker.startDate.format('MMMM D, YYYY') 
-          + " to " 
-          + picker.endDate.format('MMMM D, YYYY')
-        ); 
-        });
-        $('#CPUDateRange').on('cancel.daterangepicker', function(ev, picker) { console.log("cancel event fired"); });
+        //$(picker_id).on('show.daterangepicker', function() { console.log("show event fired"); });
+        //$(picker_id).on('hide.daterangepicker', function() { console.log("hide event fired"); });
+        //$(picker_id).on('cancel.daterangepicker', function(ev, picker) { console.log("cancel event fired"); });
     }
 
-    function draw_cpu(tag_id, rrd_file) {
+    function draw_cpu(tag_id, rrd_file, start_time, end_time, g_height, g_width, s_height, s_width) {
+
+        start_time = typeof start_time !== 'undefined' ? start_time : moment().subtract(24, 'hour').valueOf();
+        end_time = typeof end_time !== 'undefined' ? end_time : moment().valueOf();
+        g_height = typeof g_height !== 'undefined' ? g_height : mHeight_def;
+        g_width = typeof g_width !== 'undefined' ? g_width : mWidth_def;
+        s_height = typeof s_height !== 'undefined' ? s_height : sHeight_def;
+        s_width = typeof s_width !== 'undefined' ? s_width : sWidth_def;
+
+        start_time = start_time - tzTimeMS();
+        end_time = end_time - tzTimeMS();
+
+        var time_diff = (moment().valueOf() - start_time) / 1000;
+        var rra_id = getRRAID(time_diff);
 
         var gtype_format={'cputemp':{ title: 'Temperature', label:'Temp',color: "#ff8000", checked:true, lines:{
                 show: true, fill: true, fillColor:{
@@ -81,20 +110,34 @@ $(document).ready(function(){
             'pids':{title: 'Processes', label:'Processes', color: "#c00000"}};
 
         var graph_options = {tooltipOpts: { content: function(label, xval, yval){
-            var diff = new Date();
-            var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
+            var dataX = new Date((xval + tzTimeMS()));
             return "<strong>%s</strong> %y.2<br>" + dataX.toLocaleString(); 
         }
         }};
-        //var f=new rrdFlotAsync(tag_id ,rrd_file ,null,null,gtype_format);
-        var f=new rrdFlotAsync(tag_id ,rrd_file ,null,graph_options,gtype_format );
+        
+        var rrdflot_opts={use_windows: true, window_min: start_time, window_max: end_time,
+                    use_rra:true, rra: rra_id,
+                    graph_height: g_height, graph_width: g_width,
+                    scale_height: s_height, scale_width: s_width}
 
-        //var ops={use_checked_DSs: true, checked_DSs: ['cputemp','cpuUsage', 'pids'], use_rra:true, rra:2, use_windows: true, window_min:1388505600000, window_max: 1419868800000}
+        //var f=new rrdFlotAsync(tag_id ,rrd_file ,null,graph_options,gtype_format );
+        var f=new rrdFlotAsync(tag_id ,rrd_file ,null,graph_options,gtype_format, rrdflot_opts);
 
-        //var f=new rrdFlotAsync(tag_id ,rrd_file ,null,null,gtype_format,ops,ds_op_list,null);
     }
 
-    function draw_mem(tag_id, rrd_file) {
+    function draw_mem(tag_id, rrd_file, start_time, end_time, g_height, g_width, s_height, s_width) {
+        start_time = typeof start_time !== 'undefined' ? start_time : moment().subtract(24, 'hour').valueOf();
+        end_time = typeof end_time !== 'undefined' ? end_time : moment().valueOf();
+        g_height = typeof g_height !== 'undefined' ? g_height : mHeight_def;
+        g_width = typeof g_width !== 'undefined' ? g_width : mWidth_def;
+        s_height = typeof s_height !== 'undefined' ? s_height : sHeight_def;
+        s_width = typeof s_width !== 'undefined' ? s_width : sWidth_def;
+
+        start_time = start_time - tzTimeMS();
+        end_time = end_time - tzTimeMS();
+
+        var time_diff = (moment().valueOf() - start_time) / 1000;
+        var rra_id = getRRAID(time_diff);
 
         var gtype_format=
         {'total':{title: 'Total Memory', label:'Total', color: "#0000ff", checked: true},
@@ -116,8 +159,7 @@ $(document).ready(function(){
             'free':{title: 'Free Memory', label:'Free', color: "#c0c000"}};
 
         var graph_options = {tooltipOpts: { content: function(label, xval, yval){
-            var diff = new Date();
-            var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
+            var dataX = new Date((xval + tzTimeMS()));
             if(yval > (1024*1024*1024)){
                 var dataY = yval/1024/1024/1024;
                 return "<strong>%s</strong> " + dataY.toFixed(2) + " GB<br>" + dataX.toLocaleString(); 
@@ -130,26 +172,34 @@ $(document).ready(function(){
             }
         }
         }};
-        //var graph_options = {tooltipOpts: { content: function(label, xval, yval){
-        //var dataY = yval/1024/1024 ;
-        //var dataX = new Date(xval);
-        //return "<strong>%s</strong> Value:" + dataY.toFixed(2) + " MB<br>" + dataX.toLocaleString(); 
-        //}
-        //}};
 
         var ds_op_list=['total','used','free','buf', 'cached'];
-        var f=new rrdFlotAsync(tag_id ,rrd_file ,null,graph_options,gtype_format,null,ds_op_list,null);
+        var rrdflot_opts={use_windows: true, window_min: start_time, window_max: end_time,
+                    use_rra:true, rra: rra_id,
+                    graph_height: g_height, graph_width: g_width,
+                    scale_height: s_height, scale_width: s_width}
+        var f=new rrdFlotAsync(tag_id, rrd_file, null, graph_options, gtype_format, rrdflot_opts, ds_op_list, null);
 
-        //var f=new rrdFlotAsync(tag_id ,rrd_file ,null,null,gtype_format);
     }
 
-    function draw_uptime(tag_id, rrd_file) {
+    function draw_uptime(tag_id, rrd_file, start_time, end_time, g_height, g_width, s_height, s_width) {
+        start_time = typeof start_time !== 'undefined' ? start_time : moment().subtract(24, 'hour').valueOf();
+        end_time = typeof end_time !== 'undefined' ? end_time : moment().valueOf();
+        g_height = typeof g_height !== 'undefined' ? g_height : mHeight_def;
+        g_width = typeof g_width !== 'undefined' ? g_width : mWidth_def;
+        s_height = typeof s_height !== 'undefined' ? s_height : sHeight_def;
+        s_width = typeof s_width !== 'undefined' ? s_width : sWidth_def;
+
+        start_time = start_time - tzTimeMS();
+        end_time = end_time - tzTimeMS();
+
+        var time_diff = (moment().valueOf() - start_time) / 1000;
+        var rra_id = getRRAID(time_diff);
 
         var gtype_format={'uptime':{ title: 'System Uptime (minutes)', label:'Uptime',color: "#808000", checked:true}};
 
         var graph_options = {tooltipOpts: { content: function(label, xval, yval){
-            var diff = new Date();
-            var dataX = new Date((xval + (diff.getTimezoneOffset() * 60 * 1000)));
+            var dataX = new Date((xval + tzTimeMS()));
             var days = Math.floor(yval/60/24);
             var hours = Math.floor(yval/60)%24;
             if(hours < 10){
@@ -167,14 +217,39 @@ $(document).ready(function(){
             }
         }
         }};
-        var f=new rrdFlotAsync(tag_id ,rrd_file ,null,graph_options,gtype_format );
+
+        var rrdflot_opts={use_windows: true, window_min: start_time, window_max: end_time,
+                    use_rra:true, rra: rra_id,
+                    graph_height: g_height, graph_width: g_width,
+                    scale_height: s_height, scale_width: s_width}
+
+        var f=new rrdFlotAsync(tag_id ,rrd_file ,null,graph_options,gtype_format, rrdflot_opts);
 
     }
 
-    draw_cpu("graphCPU", "data/cpustatus.rrd");
-    draw_mem("graphMem", "data/meminfo.rrd");
-    draw_uptime("graphUptime", "data/uptime.rrd");
 
-    cpu_date(); 
+    draw_cpu("graphCPU", "data/cpustatus.rrd");
+    date_picker('#CPUDateRange');
+    $('#CPUDateRange').on('apply.daterangepicker', function(ev, picker) { 
+        draw_cpu("graphCPU", "data/cpustatus.rrd", picker.startDate.valueOf(), picker.endDate.valueOf());
+        //console.log("apply event fired, start/end dates are " 
+          //+ picker.startDate.format() 
+          //+ " to " 
+          //+ picker.endDate.format() 
+        //); 
+    });
+
+    draw_mem("graphMem", "data/meminfo.rrd");
+    date_picker('#MEMDateRange');
+    $('#MEMDateRange').on('apply.daterangepicker', function(ev, picker) { 
+        draw_mem("graphMem", "data/meminfo.rrd", picker.startDate.valueOf(), picker.endDate.valueOf());
+    });
+
+    draw_uptime("graphUptime", "data/uptime.rrd");
+    date_picker('#UpTimeDateRange');
+    $('#UpTimeDateRange').on('apply.daterangepicker', function(ev, picker) { 
+        draw_uptime("graphUptime", "data/uptime.rrd", picker.startDate.valueOf(), picker.endDate.valueOf());
+    });
+
 }); //EOF ready 
 
