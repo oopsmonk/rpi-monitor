@@ -13,11 +13,7 @@
     <!-- Bootstrap core CSS -->
     <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/common.css" rel="stylesheet">
-    <!--javascriptrrd with jQuery-1.11.1, flot-0.8.3, jquery.flot.tooltip-0.8.4-->
-    <!--<script src="assets/javascriptrrd.wlibs.js"></script>-->
-    <script src="assets/javascriptrrd.wlibs.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/storagegraph.js"></script>
+    <link href="assets/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
   </head>
 
   <body>
@@ -43,17 +39,18 @@
       </div>
     </nav>
 
-    <div class="container" id="id_container">
-        <div id="hdd"></div>
-        <div id="mount_point"></div>
+    <div class="container" id="hdd_container">
     </div><!-- /.container -->
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
-    <!--<script src="assets/bootstrap/js/bootstrap.min.js"></script>-->
-    <!--<script>draw_eth("graphEth1", "data/interface-eth1.rrd", "eth1");</script>-->
-    <!--<script>draw_eth("graphEth2", "data/interface-eth2.rrd", "eth2");</script>-->
+    <script src="assets/javascriptrrd.wlibs.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/bootstrap-daterangepicker/moment.js"></script>
+    <script src="assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="assets/storagegraph.js"></script>
+    <script src="assets/common.js"></script>
   </body>
 </html>
