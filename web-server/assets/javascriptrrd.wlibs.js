@@ -1260,6 +1260,8 @@ rrdFlot.prototype.createHTML = function() {
   this.legend_sel_id=this.html_id+"_legend_sel";
   this.time_sel_id=this.html_id+"_time_sel";
   this.elem_group_id=this.html_id+"_elem_group";
+  this.res_row_id="res_row_"+this.html_id;
+  this.scale_row_id="scale_row_"+this.html_id;
 
   // First clean up anything in the element
   while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
@@ -1270,6 +1272,8 @@ rrdFlot.prototype.createHTML = function() {
 
   // Header two: resulution select and DS selection title
   var rowHeader=external_table.insertRow(-1);
+  rowHeader.id=this.res_row_id;
+  rowHeader.className="rrd_res_row";
   var cellRes=rowHeader.insertCell(-1);
   cellRes.colSpan=3;
   cellRes.appendChild(document.createTextNode("Resolution:"));
@@ -1307,6 +1311,8 @@ rrdFlot.prototype.createHTML = function() {
 
   // Scale row: scaled down selection graph
   var rowScale=external_table.insertRow(-1);
+  rowScale.id=this.scale_row_id;
+  rowScale.className="rrd_scale_row";
 
   var cellScaleLegend=rowScale.insertCell(-1);
   cellScaleLegend.vAlign="top";

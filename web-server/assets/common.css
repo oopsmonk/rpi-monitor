@@ -13,3 +13,11 @@ body {
     padding: 5px 10px; 
     border: 1px solid #ccc
 }
+
+.rrd_res_row {
+    display:none;
+}
+
+.rrd_scale_row {
+    display:none;
+}
