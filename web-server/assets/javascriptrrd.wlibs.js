@@ -895,6 +895,8 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
       var el=rra.getEl(i,ds_idx);
       if (el!=undefined) {
 	flot_series.push([(timestamp+timestamp_shift)*1000.0,el]);
+      }else{ //oopsmonk, if no scale set to zero.
+	flot_series.push([(timestamp+timestamp_shift)*1000.0,0]);
       }
       timestamp+=step;
     } // end for
@@ -1260,6 +1262,7 @@ rrdFlot.prototype.createHTML = function() {
   this.legend_sel_id=this.html_id+"_legend_sel";
   this.time_sel_id=this.html_id+"_time_sel";
   this.elem_group_id=this.html_id+"_elem_group";
+  //oopsmonk, assign a id for this row, it's more flexible.
   this.res_row_id="res_row_"+this.html_id;
   this.scale_row_id="scale_row_"+this.html_id;
 
@@ -1273,6 +1276,7 @@ rrdFlot.prototype.createHTML = function() {
   // Header two: resulution select and DS selection title
   var rowHeader=external_table.insertRow(-1);
   rowHeader.id=this.res_row_id;
+  //oopsmonk, assign a class name for this row, it's more flexible.
   rowHeader.className="rrd_res_row";
   var cellRes=rowHeader.insertCell(-1);
   cellRes.colSpan=3;
