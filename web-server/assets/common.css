@@ -18,6 +18,14 @@ body {
     display:none;
 }
 
-.rrd_scale_row {
+.rrd_scale_legend {
+    display:none;
+}
+
+#graphUptime td.rrd_td_DScb {
+    display:none;
+}
+
+[id^='percent_graph_'] td.rrd_td_DScb{
     display:none;
 }

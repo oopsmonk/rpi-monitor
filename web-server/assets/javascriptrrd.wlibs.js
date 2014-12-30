@@ -1305,7 +1305,7 @@ rrdFlot.prototype.createHTML = function() {
   cellGraph.appendChild(elGraph);
 
   var cellDScb=rowGraph.insertCell(-1);
-  
+  cellDScb.className='rrd_td_DScb';
 
   cellDScb.vAlign="top";
   var formDScb=document.createElement("Form");
@@ -1319,6 +1319,7 @@ rrdFlot.prototype.createHTML = function() {
   rowScale.className="rrd_scale_row";
 
   var cellScaleLegend=rowScale.insertCell(-1);
+  cellScaleLegend.className='rrd_scale_legend';
   cellScaleLegend.vAlign="top";
   cellScaleLegend.appendChild(document.createTextNode("Legend:"));
   cellScaleLegend.appendChild(document.createElement('br'));
@@ -1378,6 +1379,7 @@ rrdFlot.prototype.createHTML = function() {
   cellScale.appendChild(elScale);
   
   var cellScaleReset=rowScale.insertCell(-1);
+  cellScaleReset.className='rrd_scale_reset';
   cellScaleReset.vAlign="top";
   cellScaleReset.appendChild(document.createTextNode(" "));
   cellScaleReset.appendChild(document.createElement('br'));
