@@ -72,9 +72,20 @@ Add schedule as below
 
 * Start web server  
 
-    $ ./web-server/rpi_monitor_web.py  
+        $ ./web-server/rpi_monitor_web.py  
 
-    Connect to http://localhost:9999/RpiMonitor/index.html  
+
+* nginx web server setup  
+
+        $ sudo apt-get install nginx  
+        $ sudo vi /etc/nginx/sites-available/default
+        #Add in server configure, maybe after line number 46.
+        location /rpi {
+                proxy_pass http://127.0.0.1:9999/RpiMonitor;
+        }
+
+    Connect to http://RPi's_IP/rpi/index.html 
+  
 
 ###Web Screenshots  
 
