@@ -13,7 +13,7 @@ Raspberry Pi System Monitor
 
 ###Checkout Source  
 
-    $ git ckeckout https://github.com/oopsmonk/rpi-monitor.git  
+    $ git clone https://github.com/oopsmonk/rpi-monitor.git  
 
 ###Crontab Configuration  
 
