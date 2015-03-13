@@ -4,6 +4,7 @@ from bottle import route, static_file, debug, run, get, redirect
 #from bottle import post, request
 import os, re, inspect
 import json
+import psutil
 
 #enable bottle debug
 debug(True)
@@ -59,5 +60,14 @@ def getMountRRD():
     flist = [f for f in os.listdir(RRDDIR) if re.match('^mount-\w*\.rrd', f)] 
     return json.dumps({"rrdflies":flist})
 
+#get cpu core rrd file
+@get(routePath + '/cpurrd')
+def cpuRRDFile():
+    corerrdfile = 'cpucores.rrd'
+    if os.path.isfile(RRDDIR + '/' + corerrdfile):
+        core_cnt = psutil.cpu_count()
+        return json.dumps({'rrdfile': corerrdfile, 'core_num':core_cnt})
+
+    return json.dumps({})
 
 run(host='localhost', port=9999, reloader=True) #debug

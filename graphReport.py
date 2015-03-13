@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys, re, os
 import rrdtool
+import psutil
 
 RUNDIR = os.path.dirname(os.path.realpath(__file__))
 RRDSDIR = RUNDIR + '/rrds'
@@ -8,6 +9,7 @@ REPORTDIR = RUNDIR + '/report'
 MemRRDFile = RRDSDIR + '/meminfo.rrd'
 CpuRRDFile = RRDSDIR + '/cpustatus.rrd'
 UptimeRRDFile = RRDSDIR + '/uptime.rrd'
+CPUCoresRRDFile = RRDSDIR + '/cpucores.rrd'
 
 cRED='#FF0000'
 cGREEN='#00FF00'
@@ -22,6 +24,22 @@ GB=MB*1024
 
 gWidth='600'
 gHeight='200'
+
+def CPUCores(period):
+    coreNum = psutil.cpu_count()
+    p=[]
+    for i in range(coreNum):
+        p.append('DEF:CPU_' + str(i) + '=' + CPUCoresRRDFile + ':core_' + str(i) + ':AVERAGE')
+        p.append('LINE' + str(i) + ':CPU_' + str(i) + cList[ i % len(cList) ])
+        p.append('GPRINT:CPU_' + str(i) + ':AVERAGE:CPU_'+ str(i) + ' Avg\\:%2.0lf')
+
+    print p
+    #Core Usage
+    rrdtool.graph(REPORTDIR + '/CPUCores' + period + '.png', '--start', period,
+        '--title', 'Core Loading (%)', '-w', gWidth, '-h', gHeight, 
+        '--lower-limit', '0', '--upper-limit', '100',
+        p,
+        'COMMENT:\\n')
 
 def CpuInfo(period):
     #Temp
@@ -190,6 +208,7 @@ def main():
         sys.exit(1)
 
     CpuInfo(p)
+    CPUCores(p)
     UptimeInfo(p)
     MemoryInfo(p)
     DiskInfo(p)

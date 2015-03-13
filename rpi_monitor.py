@@ -9,6 +9,7 @@ RRDSDIR = RUNDIR + '/rrds'
 CpuRRDFile = RRDSDIR + '/cpustatus.rrd'
 MemRRDFile = RRDSDIR + '/meminfo.rrd'
 UptimeRRDFile = RRDSDIR + '/uptime.rrd'
+CPUCoresRRDFile = RRDSDIR + '/cpucores.rrd'
 
 '''
 1 day - 5-minute resolution
@@ -72,6 +73,35 @@ def updateCPURRD(ctemp, cusage, pids):
 
     #update data
     ret = rrd_update(CpuRRDFile, 'N:%s:%s:%s' %(ctemp, cusage, pids));
+    if ret:
+        print rrdtool.error()
+        return False
+
+    return True
+
+def updateCPUCoreRRD(cpu_cores, cpu_num):
+    if not os.path.exists(CPUCoresRRDFile):
+
+        core_DS=[]
+        for i in range(cpu_num):
+            core_DS.append("DS:core_" + str(i) + ":GAUGE:600:0:100")
+
+        ret = rrdtool.create(CPUCoresRRDFile, '--step', '300',
+                core_DS,
+                'RRA:AVERAGE:0.5:1:864',
+                'RRA:AVERAGE:0.5:3:1344',
+                'RRA:AVERAGE:0.5:12:1488',
+                'RRA:AVERAGE:0.5:36:2960')
+        if ret:
+            print rrdtool.error()
+            return False
+
+    #update data
+    core_data = "N"
+    for i in range(cpu_num):
+        core_data+= ":" + str(cpu_cores[i])
+
+    ret = rrd_update(CPUCoresRRDFile, core_data);
     if ret:
         print rrdtool.error()
         return False
@@ -218,6 +248,7 @@ def get_cpu_temp():
 def get_cpuInfo():
     time.sleep(3)
     cpuUsage = psutil.cpu_percent()
+    cpuNum = psutil.cpu_count()
     cTemp = get_cpu_temp()
     pids = psutil.pids()
 #    gTemp = get_gpu_temp()
@@ -225,6 +256,12 @@ def get_cpuInfo():
     if updateCPURRD(cTemp,  cpuUsage, len(pids)) == False:
         return False
 
+    if cpuNum > 1:
+        cpuCores = psutil.cpu_percent(percpu=True)
+        if updateCPUCoreRRD(cpuCores, cpuNum) == False:
+            return False
+
+    
     uptime = int(time.time() - psutil.boot_time())/60 #uptime in minutes
     if updateUptimeRRD(uptime) == False:
         return False
@@ -288,7 +325,8 @@ def get_diskInfo():
 
 def test():
     print 'test....'
-    get_netInfo()
+    #get_netInfo()
+    get_cpuInfo()
 
 def main():
 
@@ -298,7 +336,6 @@ def main():
     get_mountInfo()
     get_netInfo()
         
-    
 if __name__ == '__main__':
     main()
     #test()

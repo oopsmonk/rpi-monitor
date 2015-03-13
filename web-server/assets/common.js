@@ -79,20 +79,21 @@ function date_picker(picker_id){
 
 /*
  *<div id="cpu_info">
- *<div class="row">
- *    <div class="col-md-5">
- *        <h1>CPU Information</h1>
- *    </div>
- *    <div class="col-md-7">
- *        <div id="CPUDateRange" class="pull-left date-picker-range" >
- *          <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
- *          <span></span> <b class="caret"></b>
+ *    <div class="row">
+ *        <div class="col-md-5">
+ *            <h1>CPU Information</h1>
+ *        </div>
+ *        <div class="col-md-7">
+ *            <div id="CPUDateRange" class="pull-left date-picker-range" >
+ *              <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+ *              <span></span> <b class="caret"></b>
+ *            </div>
  *        </div>
  *    </div>
- *</div>
- *<div class="row">
- *    <div class="col-md-12">
- *        <div id="graphCPU"></div>
+ *    <div class="row">
+ *        <div class="col-md-12">
+ *            <div id="graphCPU"></div>
+ *        </div>
  *    </div>
  *</div>
  */
