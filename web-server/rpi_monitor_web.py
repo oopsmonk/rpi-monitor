@@ -61,12 +61,12 @@ def getMountRRD():
     return json.dumps({"rrdfile":flist})
 
 #get cpu core rrd file
-@get(routePath + '/cpurrd')
+@get(routePath + '/cpucores')
 def cpuRRDFile():
     corerrdfile = 'cpucores.rrd'
     if os.path.isfile(RRDDIR + '/' + corerrdfile):
         core_cnt = psutil.cpu_count()
-        return json.dumps({'rrdfile': corerrdfile, 'core_num':core_cnt})
+        return json.dumps({'core_num':core_cnt})
 
     return json.dumps({})
 
