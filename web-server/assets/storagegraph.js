@@ -198,17 +198,11 @@ $(document).ready(function(){
     }
 
     $.getJSON("hddrrd", function(data){
-        $.each(data, function(index, value){
-            //alert("index: " + index + " , value: "+ value);
-            createHDDGraph(value);
-        });
+        createHDDGraph(data["rrdfile"]);
     });
 
     $.getJSON("mountrrd", function(data){
-        $.each(data, function(index, value){
-            //alert("index: " + index + " , value: "+ value);
-            createMPGraph(value);
-        });
+        createMPGraph(data["rrdfile"]);
     });
 }); //EOF ready 
 

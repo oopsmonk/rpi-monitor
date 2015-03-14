@@ -76,10 +76,7 @@ $(document).ready(function(){
     
 
     $.getJSON("netrrd", function(data){
-        $.each(data, function(index, value){
-            //alert("index: " + index + " , value: "+ value);
-            createNetGraph(value);
-        });
+        createNetGraph(data["rrdfile"]);
     });
 
 }); //EOF ready 

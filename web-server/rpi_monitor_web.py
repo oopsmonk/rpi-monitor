@@ -36,7 +36,7 @@ def rrd_file(filepath):
 @get(routePath + '/sysrrd')
 def sysRRDFile():
     sysrrdlist = ["cpustatus.rrd", "meminfo.rrd", "uptime.rrd"]
-    return json.dumps({"rrdfiles":sysrrdlist})
+    return json.dumps({"rrdfile":sysrrdlist})
 
 
 #get network rrd files
@@ -45,20 +45,20 @@ def getNetworkRRD():
     global RRDDIR 
     flist = [f for f in os.listdir(RRDDIR) if re.match('^interface-\w*\.rrd', f)] 
     print flist 
-    return json.dumps({"rrdflies":flist})
+    return json.dumps({"rrdfile":flist})
     
 #get HDD rrd files
 @get(routePath + '/hddrrd')
 def getHDDRRD():
     global RRDDIR 
     hdd_files = [f for f in os.listdir(RRDDIR) if re.match('^hdd-\w*\.rrd', f)] 
-    return json.dumps({"rrdflies":hdd_files})
+    return json.dumps({"rrdfile":hdd_files})
 
 #get mount point rrd files
 @get(routePath + '/mountrrd')
 def getMountRRD():
     flist = [f for f in os.listdir(RRDDIR) if re.match('^mount-\w*\.rrd', f)] 
-    return json.dumps({"rrdflies":flist})
+    return json.dumps({"rrdfile":flist})
 
 #get cpu core rrd file
 @get(routePath + '/cpurrd')
