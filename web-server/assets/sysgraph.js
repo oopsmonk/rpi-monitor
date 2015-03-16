@@ -167,6 +167,10 @@ $(document).ready(function(){
         
         var core_colors = ["#00f800", "#0000ff", "#c0ff00", "#c0c000", "#ff0000"];
         var gtype_format = new Object();
+        gtype_format ['core_avg'] = {title:'Avg', lable:'Avg', color:'#B900B9',checked:true, lines:{
+            show: true, fill: true, fillColor:{colors:[{opacity:0.2},{opacity:0.5}]}
+        }};
+
         for(i = 0; i < cores; i++){
             gtype_format ['core_' + i] = {title: 'Core_'+i, lable:'Core_'+i, color:core_colors[i % core_colors.length], checked: true}; 
         }

@@ -33,7 +33,10 @@ def CPUCores(period):
         p.append('LINE' + str(i) + ':CPU_' + str(i) + cList[ i % len(cList) ])
         p.append('GPRINT:CPU_' + str(i) + ':AVERAGE:CPU_'+ str(i) + ' Avg\\:%2.0lf')
 
-    print p
+    p.append('DEF:CPU_Avg=' + CPUCoresRRDFile + ':core_avg:AVERAGE')
+    p.append('LINE'+ str(coreNum) +':CPU_Avg#FF0000')
+    p.append('GPRINT:CPU_Avg:AVERAGE:CPU Avg\\:%2.0lf')
+
     #Core Usage
     rrdtool.graph(REPORTDIR + '/CPUCores' + period + '.png', '--start', period,
         '--title', 'Core Loading (%)', '-w', gWidth, '-h', gHeight, 

@@ -86,6 +86,7 @@ def updateCPUCoreRRD(cpu_cores, cpu_num):
         for i in range(cpu_num):
             core_DS.append("DS:core_" + str(i) + ":GAUGE:600:0:100")
 
+        core_DS.append("DS:core_avg:GAUGE:600:0:100")
         ret = rrdtool.create(CPUCoresRRDFile, '--step', '300',
                 core_DS,
                 'RRA:AVERAGE:0.5:1:864',
@@ -96,10 +97,14 @@ def updateCPUCoreRRD(cpu_cores, cpu_num):
             print rrdtool.error()
             return False
 
+    core_avg = sum(cpu_cores)/float(4)
+
     #update data
     core_data = "N"
     for i in range(cpu_num):
         core_data+= ":" + str(cpu_cores[i])
+
+    core_data+=":"+str(core_avg)
 
     ret = rrd_update(CPUCoresRRDFile, core_data);
     if ret:
