@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from bottle import route, static_file, debug, run, get, redirect
-#from bottle import post, request
+from bottle import post, request
 import os, re, inspect
 import json
 import psutil
@@ -69,5 +69,42 @@ def cpuRRDFile():
         return json.dumps({'core_num':core_cnt})
 
     return json.dumps({})
+
+#get system real time info
+@get(routePath + '/rt_info')
+def realTimeInfo():
+    rt_info = []
+    top_info = []
+    for p in psutil.process_iter():
+        try:
+            p = p.as_dict(['pid', 'name', 'username', 'cpu_percent', 'memory_percent', 'create_time', 'status'])
+        except psutil.NoSuchProcess:
+            return json.dumps({'error':'NoSuchProcess'})
+        else:
+            top_info.append(p)
+
+    rt_info.append(psutil.users())
+    rt_info.append(top_info)
+    return json.dumps(rt_info)
+
+#get process detail info by pid
+#input JSON: {'pid':100}
+#out JSON: psutil.Process().as_dict()
+@post(routePath + '/proc_info')
+def processInfo():
+    data = request.json
+    if data is None:
+        print('NoneData')
+        return json.dumps({'error':'NoneData'})
+
+    p = data.get('pid')
+
+    try:
+        proc_info = psutil.Process(int(p)).as_dict()
+    except psutil.NoSuchProcess:
+        print('error')
+        return json.dumps({'error':'NoSuchProcess'})
+    else:
+        return json.dumps(proc_info)
 
 run(host='localhost', port=9999, reloader=True) #debug
