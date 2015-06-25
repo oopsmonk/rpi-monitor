@@ -278,7 +278,7 @@ def get_memInfo():
     '''
     svmem(total=508686336L, available=432787456L, percent=14.9, used=480034816L, free=28651520L, active=214945792, inactive=228995072, buffers=43900928L, cached=360235008)
     '''
-    mem = psutil.phymem_usage()
+    mem = psutil.virtual_memory()
 
     if updateMemRRD(mem.total, mem.used, 
             mem.buffers, mem.cached, (mem.total - mem.used)) == False:
