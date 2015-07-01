@@ -29,3 +29,13 @@ body {
 [id^='percent_graph_'] td.rrd_td_DScb{
     display:none;
 }
+
+.rt_item {
+    width: 100%;
+    height: 200px;
+}
+
+.rt_proc_table {
+    width: 100%;
+    height: 600px;
+}

@@ -5,6 +5,7 @@ from bottle import post, request
 import os, re, inspect
 import json
 import psutil
+import datetime
 
 #enable bottle debug
 debug(True)
@@ -81,8 +82,18 @@ def realTimeInfo():
         except psutil.NoSuchProcess:
             return json.dumps({'error':'NoSuchProcess'})
         else:
-            top_info.append(p)
+            top_info.append([p.get('pid'), p.get('name'), p.get('username'), p.get('cpu_percent'), p.get('memory_percent'), datetime.datetime.fromtimestamp(p.get('create_time')).strftime("%Y-%m-%d %H:%M:%S"), p.get('status')])
 
+    nets = psutil.net_io_counters()
+    #snetio(bytes_sent=42988, bytes_recv=42988, packets_sent=595, packets_recv=595, errin=0, errout=0, dropin=0, dropout=0)
+    disks = psutil.disk_io_counters()
+    #sdiskio(read_count=9837, write_count=43761, read_bytes=198268416, write_bytes=933855232, read_time=87870, write_time=35913990)
+    mem = psutil.virtual_memory()
+    #svmem(total=508686336L, available=432787456L, percent=14.9, used=480034816L, free=28651520L, active=214945792, inactive=228995072, buffers=43900928L, cached=360235008)
+
+    rt_info.append(nets)
+    rt_info.append(disks)
+    rt_info.append(mem)
     rt_info.append(psutil.users())
     rt_info.append(top_info)
     return json.dumps(rt_info)
