@@ -1,6 +1,31 @@
-
-var max_point=50
+var update_interval=5; //seconds
+var KB=1024;
+var MB=KB*1024;
+var GB=MB*1024;
+var max_point=50;
+var tip_fixed=2;
 //net data
+function traffic_tip(label, xval, yval, flotItem){
+    if (yval > GB)
+        return label + ' ' + (yval/GB).toFixed(tip_fixed) + 'GB';
+    else if (yval > MB)
+        return label + ' ' + (yval/MB).toFixed(tip_fixed) + 'MB';
+    else if (yval > KB)
+        return label + ' ' + (yval/KB).toFixed(tip_fixed) + 'KB';
+    else
+        return label + ' ' + yval + 'B';
+}
+function suffixFormatter(val, axis) {
+    if (val > GB)
+        return (val / GB).toFixed(tip_fixed) + " GB";
+    else if (val > MB)
+        return (val / MB).toFixed(tip_fixed) + " MB";
+    else if (val > KB)
+        return (val / KB).toFixed(tip_fixed) + " KB";
+    else
+        return val.toFixed(tip_fixed);
+}
+
 var init=0;
 var net_xaxis=0;
 var net_sent=0;
@@ -11,14 +36,24 @@ var net_option={
         shadowSize: 0   // Drawing is faster without shadows
     },
     yaxis: {
-        min: 0
+        min: 0,
         //max: 100000 
+        tickFormatter: suffixFormatter,
+        tickDecimals: 0
     },
     xaxis: {
         show: false
     },
     lines:{show:true},points:{show:true},
-    grid: { hoverable: true, clickable: false} 
+    grid: { hoverable: true, clickable: false},
+    tooltip: {
+        show: true,
+        content: traffic_tip, 
+        shifts: {
+          x: 20,
+          y: 0
+        }
+    }
 };
 var net_plot = $.plot("#net_io", net_data, net_option);
 
@@ -33,8 +68,8 @@ function rt_update_net(value){
         var c = value[1] - net_rec;
         net_sent = value[0];
         net_rec = value[1];
-        var datum1 = [net_xaxis, s/1024];
-        var datum2 = [net_xaxis, c/1024];
+        var datum1 = [net_xaxis, s/update_interval];
+        var datum2 = [net_xaxis, c/update_interval];
         //console.log('data0:' + datum1);
         //console.log('data1:' + datum2);
         net_data[0].push(datum1);
@@ -67,14 +102,24 @@ var disk_option={
         shadowSize: 0   // Drawing is faster without shadows
     },
     yaxis: {
-        min: 0
+        min: 0,
         //max: 100000 
+        tickFormatter: suffixFormatter,
+        tickDecimals: 0
     },
     xaxis: {
         show: false
     },
     lines:{show:true},points:{show:true},
-    grid: { hoverable: true, clickable: false} 
+    grid: { hoverable: true, clickable: false},
+    tooltip: {
+        show: true,
+        content: traffic_tip, 
+        shifts: {
+          x: 20,
+          y: 0
+        }
+    }
 };
 var disk_plot = $.plot("#disk_io", disk_data, disk_option);
 
@@ -89,8 +134,8 @@ function rt_update_disk(value){
         var c = value[3] - disk_write;
         disk_read = value[2];
         disk_write = value[3];
-        var datum1 = [disk_xaxis, s/1024];
-        var datum2 = [disk_xaxis, c/1024];
+        var datum1 = [disk_xaxis, s/update_interval];
+        var datum2 = [disk_xaxis, c/update_interval];
         disk_data[0].push(datum1);
         disk_data[1].push(datum2);
         if(disk_data[0].length > max_point){
@@ -112,10 +157,9 @@ function rt_update_disk(value){
 
 function rt_update_mem(value){
     //vmem(total=508686336L, available=432787456L, percent=14.9, used=480034816L, free=28651520L, active=214945792, inactive=228995072, buffers=43900928L, cached=360235008)
-    var MB=1024*1024;
     var mem_data=[
-        {data:Math.round(value[3]/MB), label: 'Used'},
-        {data:Math.round(value[4]/MB), label: 'Free'}
+        {data:value[3], label: 'Used'},
+        {data:value[4], label: 'Free'}
     ];
     $.plot('#mem_pie', mem_data, {
         series: {
@@ -136,14 +180,13 @@ function rt_update_mem(value){
         },
         tooltip: {
             show: true,
-            content: "%n MB", // show percentages, rounding to 2 decimal places
+            content: traffic_tip, 
             shifts: {
               x: 20,
               y: 0
             }
         }
     });
-    return 0;
 }
 
 var user_table_obj={};
@@ -168,8 +211,8 @@ var proc_table_obj={};
 function rt_update_procs(value){
 
     var procs_info=[];
-    console.log('proc count: ' + value.length);
-    console.log('[0]' + value[0]) ;
+    //console.log('proc count: ' + value.length);
+    //console.log('[0]' + value[0]) ;
     for(i=0; i < value.length ; i++){
         //(['pid', 'name', 'username', 'cpu_percent', 'memory_percent', 'create_time', 'status'])
         procs_info.push([value[i][0], value[i][1], value[i][2], value[i][3], value[i][4].toFixed(2), value[i][5], value[i][6]]);
@@ -177,6 +220,36 @@ function rt_update_procs(value){
     proc_table_obj.fnClearTable();
     proc_table_obj.fnAddData(procs_info);
     proc_table_obj.fnDraw(); 
+}
+
+//bernii/gauge.js
+var gauge_opts = {
+    lines: 12, // The number of lines to draw
+    angle: 0, // The length of each line
+    lineWidth: 0.4, // The line thickness
+    pointer: {
+        length: 0.7, // The radius of the inner circle
+        strokeWidth: 0.035, // The rotation offset
+        color: '#000000' // Fill color
+    },
+    limitMax: 'false',   // If true, the pointer will not go past the end of the gauge
+    percentColors: [[0.0, "#a9d70b" ], [0.50, "#f9c802"], [1.0, "#ff0000"]],
+    colorStart: '#6FADCF',   // Colors
+    colorStop: '#8FC0DA',    // just experiment with them
+    strokeColor: '#E0E0E0',   // to see which ones work best for you
+    generateGradient: true
+};
+
+var temp_gauge={};
+var cpu_gauge={};
+function rt_update_temp(value){
+    $('#temp_text').text(value + ' \u00B0C');
+    temp_gauge.set(value); // set actual value
+}
+
+function rt_update_cpu(value){
+    $('#cpu_load_text').text(value + ' %');
+    cpu_gauge.set(value); // set actual value
 }
 
 function fetchData(){
@@ -191,24 +264,14 @@ function fetchData(){
 
         rt_update_users(data[3]);
         rt_update_procs(data[4]);
-        setTimeout(function(){fetchData();},5000);
+        rt_update_temp(data[5]);
+        rt_update_cpu(data[6]);
+        setTimeout(function(){fetchData();},update_interval*1000);
 
     });   
 
 }
 
-function showTooltip(x, y, contents) {
-    $('<div id="tooltip">' + contents + '</div>').css( {
-        position: 'absolute',
-        display: 'none',
-        top: y + 5,
-        left: x + 5,
-        border: '1px solid #fdd',
-        padding: '2px',
-        'background-color': '#fee',
-        opacity: 0.80
-    }).appendTo("body").fadeIn(200);
-}
 
 $(document).ready(function(){
 
@@ -244,51 +307,13 @@ $(document).ready(function(){
         ]
     } );  
 
+    temp_gauge = new Gauge(document.getElementById('temp_meter')).setOptions(gauge_opts); // create sexy gauge!
+    temp_gauge.maxValue = 100; // set max gauge value
+    cpu_gauge = new Gauge(document.getElementById('cpu_meter')).setOptions(gauge_opts); // create sexy gauge!
+    cpu_gauge.maxValue = 100; // set max gauge value
+
     fetchData();
 
-    var net_previousPoint = null;
-    $("#net_io").bind("plothover", function (event, pos, item) {
-        //$("#x").text(pos.x.toFixed(2));
-        //$("#y").text(pos.y.toFixed(2));
 
-        if (item) {
-            if (net_previousPoint != item.datapoint) {
-                net_previousPoint = item.datapoint;
-                
-                $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
-                    y = item.datapoint[1].toFixed(2);
-                
-                showTooltip(item.pageX, item.pageY,
-                            item.series.label + " " + y + "KB");
-            }
-        }
-        else {
-            $("#tooltip").remove();
-            clicksYet = false;
-            net_previousPoint = null;            
-        }
-    });
-    var disk_previousPoint = null;
-    $("#disk_io").bind("plothover", function (event, pos, item) {
-
-        if (item) {
-            if (disk_previousPoint != item.datapoint) {
-                disk_previousPoint = item.datapoint;
-                
-                $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
-                    y = item.datapoint[1].toFixed(2);
-                
-                showTooltip(item.pageX, item.pageY,
-                            item.series.label + " " + y + "KB");
-            }
-        }
-        else {
-            $("#tooltip").remove();
-            clicksYet = false;
-            disk_previousPoint = null;            
-        }
-    });
 
 }); //EOF page init

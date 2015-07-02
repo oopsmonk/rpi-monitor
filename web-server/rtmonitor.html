@@ -35,7 +35,7 @@
             <li><a href="index.html">System</a></li>
             <li><a href="network.html">Network</a></li>
             <li><a href="storage.html">Storage</a></li>
-            <li class="active"><a href="#">Real-Time Monitor</a></li>
+            <li class="active"><a href="#">Real-Time</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -43,28 +43,37 @@
 
     <div class="container" id="rt_container">
         <div class="row">
-            <div class="col-xs-8 col-sm-6 col-md-8">
-                <h1>Network IO</h1>
-                <div id="net_io" class="rt_item">
-                </div><!-- net_io -->
-            </div>
-            <div class="col-xs-4 col-sm-6 col-md-4">
+            <div class="col-xs-6 col-sm-3 col-md-3">
                 <h1>Memory Usage</h1>
-                <div id="mem_pie" class="rt_item">
-                </div><!-- mem_pie -->
+                <div id="mem_pie" class="rt_item"></div><!-- mem_pie -->
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-3">
+                <h1>CPU</h1>
+                <canvas id="cpu_meter" class="rt_item"></canvas>
+                <div id="cpu_load_text" class="gauge_text" >0</div>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-3">
+                <h1>Temp</h1>
+                <canvas id="temp_meter" class="rt_item"></canvas>
+                <div id="temp_text" class="gauge_text">0</div>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-3">
+                <h1>Users</h1>
+                <div id="user_list" class="rt_item">
+                </div><!-- user_list -->
             </div>
         </div>
         
         <div class="row">
-            <div class="col-xs-8 col-sm-6 col-md-8">
+            <div class="col-xs-12 col-sm-12 col-md-6">
+                <h1>Network IO</h1>
+                <div id="net_io" class="rt_item">
+                </div><!-- net_io -->
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6">
                 <h1>Disk IO</h1>
                 <div id="disk_io" class="rt_item">
                 </div><!-- disk_io -->
-            </div>
-            <div class="col-xs-4 col-sm-6 col-md-4">
-                <h1>Users</h1>
-                <div id="user_list" class="rt_item">
-                </div><!-- user_list -->
             </div>
         </div>
         <div class="row">
@@ -85,6 +94,7 @@
     <script src="assets/flot/jquery.flot.tooltip.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.resize.min.js"></script>
     <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script src="assets/gauge.min.js"></script>
     <script src="assets/rt.js"></script>
   </body>
 </html>

@@ -16,6 +16,17 @@ routePath = '/RpiMonitor'
 rootPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 RRDDIR = rootPath + '/data'
 
+def get_cpu_temp():
+
+    tempfile = '/sys/class/thermal/thermal_zone0/temp'
+    if os.path.exists(tempfile):
+        tf = open(tempfile)
+        cpu_temp = tf.read()
+        tf.close()
+        return float(cpu_temp)/1000
+    else:
+        return 0
+
 @route(routePath)
 def rootHome():
     #return redirect(routePath+'/index.html')
@@ -96,6 +107,8 @@ def realTimeInfo():
     rt_info.append(mem)
     rt_info.append(psutil.users())
     rt_info.append(top_info)
+    rt_info.append(get_cpu_temp())
+    rt_info.append(psutil.cpu_percent())
     return json.dumps(rt_info)
 
 #get process detail info by pid
