@@ -23,7 +23,7 @@ def get_cpu_temp():
         tf = open(tempfile)
         cpu_temp = tf.read()
         tf.close()
-        return float(cpu_temp)/1000
+        return round(float(cpu_temp)/1000,2)
     else:
         return 0
 
