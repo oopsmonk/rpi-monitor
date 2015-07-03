@@ -35,6 +35,17 @@ function traffic_tip(label, xval, yval, flotItem){
         return label + ' ' + yval + 'B' + '<br>' + time;
 }
 
+function mem_tip(label, xval, yval, flotItem){
+    if (yval > GB)
+        return label + ' ' + (yval/GB).toFixed(tip_fixed) + 'GB';
+    else if (yval > MB)
+        return label + ' ' + (yval/MB).toFixed(tip_fixed) + 'MB';
+    else if (yval > KB)
+        return label + ' ' + (yval/KB).toFixed(tip_fixed) + 'KB';
+    else
+        return label + ' ' + yval + 'B';
+}
+
 function suffixFormatter(val, axis) {
     if (val > GB)
         return (val / GB).toFixed(tip_fixed) + " GB";
@@ -196,7 +207,7 @@ function rt_update_mem(value){
         },
         tooltip: {
             show: true,
-            content: traffic_tip, 
+            content: mem_tip, 
             shifts: {
               x: 20,
               y: 0

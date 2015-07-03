@@ -35,50 +35,59 @@
             <li><a href="index.html">System</a></li>
             <li><a href="network.html">Network</a></li>
             <li><a href="storage.html">Storage</a></li>
-            <li class="active"><a href="rtmonitor_l2.html">Real-Time</a></li>
+            <li class="active"><a href="rtmonitor.html">Real-Time</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container" id="rt_container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <h3>CPU</h3>
-                <canvas id="cpu_meter" class="rt_item"></canvas>
-                <div id="cpu_load_text" class="gauge_text" >0</div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <h3>Temp</h3>
-                <canvas id="temp_meter" class="rt_item"></canvas>
-                <div id="temp_text" class="gauge_text">0</div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <h3>Memory</h3>
-                <div id="mem_pie" class="rt_item"></div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-3">
-                <h3>Users</h3>
-                <div id="user_list" class="rt_item"></div>
-            </div>
+        <div class="col-xs-12 col-sm-6 col-md-5">
+            <div class="row"> 
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="row"> 
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <h3>CPU</h3>
+                            <canvas id="cpu_meter" class="rt_item"></canvas>
+                            <div id="cpu_load_text" class="gauge_text" >0</div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <h3>Memory</h3>
+                            <div id="mem_pie" class="rt_item"></div><!-- mem_pie -->
+                        </div>
+                    </div> <!-- row -->
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <h3>Temp</h3>
+                            <canvas id="temp_meter" class="rt_item"></canvas>
+                            <div id="temp_text" class="gauge_text">0</div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <h3>Users</h3>
+                            <div id="user_list" class="rt_item"></div>
+                        </div>
+                    </div> <!-- row -->
+                </div>
+            </div> <!-- row -->
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <h3>Network IO</h3>
+                    <div id="net_io" class="rt_item"></div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <h3>Disk IO</h3>
+                    <div id="disk_io" class="rt_item"></div>
+                </div>
+            </div> <!-- row -->
+        </div> 
+
+        <div class="col-xs-12 col-sm-6 col-md-7">
+            <h3>Process</h3>
+            <div id="proc_list" class="rt_proc_table"></div>
         </div>
         
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-6">
-                <h3>Network IO</h3>
-                <div id="net_io" class="rt_item"></div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-6">
-                <h3>Disk IO</h3>
-                <div id="disk_io" class="rt_item"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <h3>Process</h3>
-                <div id="proc_list" class="rt_proc_table"></div>
-            </div>
-        </div>
     </div><!-- /.container -->
 
     <script src="assets/javascriptrrd.wlibs.min.js"></script>
