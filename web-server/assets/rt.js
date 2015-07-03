@@ -4,17 +4,37 @@ var MB=KB*1024;
 var GB=MB*1024;
 var max_point=50;
 var tip_fixed=2;
-//net data
-function traffic_tip(label, xval, yval, flotItem){
-    if (yval > GB)
-        return label + ' ' + (yval/GB).toFixed(tip_fixed) + 'GB';
-    else if (yval > MB)
-        return label + ' ' + (yval/MB).toFixed(tip_fixed) + 'MB';
-    else if (yval > KB)
-        return label + ' ' + (yval/KB).toFixed(tip_fixed) + 'KB';
-    else
-        return label + ' ' + yval + 'B';
+var timestamp;
+
+function date2str(x, y) {
+    var z = {
+        M: x.getMonth() + 1,
+        d: x.getDate(),
+        h: x.getHours(),
+        m: x.getMinutes(),
+        s: x.getSeconds()
+    };
+    y = y.replace(/(M+|d+|h+|m+|s+)/g, function(v) {
+        return ((v.length > 1 ? "0" : "") + eval('z.' + v.slice(-1))).slice(-2)
+    });
+
+    return y.replace(/(y+)/g, function(v) {
+        return x.getFullYear().toString().slice(-v.length)
+    });
 }
+
+function traffic_tip(label, xval, yval, flotItem){
+    var time = date2str(new Date(xval), 'hh:mm:ss');
+    if (yval > GB)
+        return label + ' ' + (yval/GB).toFixed(tip_fixed) + 'GB' + '<br>' + time;
+    else if (yval > MB)
+        return label + ' ' + (yval/MB).toFixed(tip_fixed) + 'MB' + '<br>' + time;
+    else if (yval > KB)
+        return label + ' ' + (yval/KB).toFixed(tip_fixed) + 'KB' + '<br>' + time;
+    else
+        return label + ' ' + yval + 'B' + '<br>' + time;
+}
+
 function suffixFormatter(val, axis) {
     if (val > GB)
         return (val / GB).toFixed(tip_fixed) + " GB";
@@ -27,7 +47,6 @@ function suffixFormatter(val, axis) {
 }
 
 var init=0;
-var net_xaxis=0;
 var net_sent=0;
 var net_rec=0;
 var net_data = [[],[]];
@@ -68,8 +87,8 @@ function rt_update_net(value){
         var c = value[1] - net_rec;
         net_sent = value[0];
         net_rec = value[1];
-        var datum1 = [net_xaxis, s/update_interval];
-        var datum2 = [net_xaxis, c/update_interval];
+        var datum1 = [timestamp, s/update_interval];
+        var datum2 = [timestamp, c/update_interval];
         //console.log('data0:' + datum1);
         //console.log('data1:' + datum2);
         net_data[0].push(datum1);
@@ -79,7 +98,6 @@ function rt_update_net(value){
             net_data[0] = net_data[0].splice(1);
             net_data[1] = net_data[1].splice(1);
         }
-        net_xaxis++;
     }
     //net_plot.setData(net_data);
     net_plot.setData([
@@ -92,7 +110,6 @@ function rt_update_net(value){
 
 //disk data
 var init_disk=0;
-var disk_xaxis=0;
 var disk_read=0;
 var disk_write=0;
 
@@ -134,8 +151,8 @@ function rt_update_disk(value){
         var c = value[3] - disk_write;
         disk_read = value[2];
         disk_write = value[3];
-        var datum1 = [disk_xaxis, s/update_interval];
-        var datum2 = [disk_xaxis, c/update_interval];
+        var datum1 = [timestamp, s/update_interval];
+        var datum2 = [timestamp, c/update_interval];
         disk_data[0].push(datum1);
         disk_data[1].push(datum2);
         if(disk_data[0].length > max_point){
@@ -143,7 +160,6 @@ function rt_update_disk(value){
             disk_data[0] = disk_data[0].splice(1);
             disk_data[1] = disk_data[1].splice(1);
         }
-        disk_xaxis++;
         
     }
     //disk_plot.setData(disk_data);
@@ -158,8 +174,8 @@ function rt_update_disk(value){
 function rt_update_mem(value){
     //vmem(total=508686336L, available=432787456L, percent=14.9, used=480034816L, free=28651520L, active=214945792, inactive=228995072, buffers=43900928L, cached=360235008)
     var mem_data=[
-        {data:value[3], label: 'Used'},
-        {data:value[4], label: 'Free'}
+        {data:(value[0]-value[1]), label: 'Used'},
+        {data:value[1], label: 'Available'}
     ];
     $.plot('#mem_pie', mem_data, {
         series: {
@@ -233,7 +249,7 @@ var gauge_opts = {
         color: '#000000' // Fill color
     },
     limitMax: 'false',   // If true, the pointer will not go past the end of the gauge
-    percentColors: [[0.0, "#a9d70b" ], [0.50, "#f9c802"], [1.0, "#ff0000"]],
+    percentColors: [[0.0, "#009933" ], [0.50, "#CC9933"], [1.0, "#FF0033"]],
     colorStart: '#6FADCF',   // Colors
     colorStop: '#8FC0DA',    // just experiment with them
     strokeColor: '#E0E0E0',   // to see which ones work best for you
@@ -253,6 +269,7 @@ function rt_update_cpu(value){
 }
 
 function fetchData(){
+    timestamp= new Date();
 
     $.getJSON('rt_info', function(data){
         //netio(bytes_sent=42988, bytes_recv=42988, packets_sent=595, packets_recv=595, errin=0, errout=0, dropin=0, dropout=0)
