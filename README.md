@@ -54,7 +54,7 @@ cpustatus.rrd => CPU usage
 meminfo.rrd => Memory usage  
 uptime.rrd => System uptime  
 
-* Add RRD files which want to show on web. 
+* Add RRD files which want to show on web.   
 Create symbolic links via `ln -s` command, it's linked from `rpi-monitor/web-server/data` to `rpi-monitor/rrds`(the original data).  
 
         $ cd ./web-server/data/
