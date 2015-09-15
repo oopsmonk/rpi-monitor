@@ -9,7 +9,7 @@ Raspberry Pi System Monitor
 
 ###Install rpi-monitor  
 
-    curl https://raw.githubusercontent.com/oopsmonk/rpi-monitor/master/auto-install.sh | bash
+    $ curl https://raw.githubusercontent.com/oopsmonk/rpi-monitor/master/auto-install.sh > auto-install.sh && bash !#:3 && rm !#:3 
 
 If no error occurred, you're ready to go!  
 
