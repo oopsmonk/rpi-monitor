@@ -26,7 +26,7 @@ fi
 
 #asking password  
 info "Install requirements..."
-read -s -p "Enter password($user): " user_pwd
+read -s -p "[sudo] password for $user: " user_pwd
 #check pwd
 sudo -k
 echo $user_pwd | sudo -S echo oops &> /dev/null
