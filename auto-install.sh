@@ -109,7 +109,7 @@ info "$schedule"
 read -p $'\e[1;33mEnable nginx web server? [Y/n]:\e[0m ' config_nginx
 if [[ $config_nginx =~ ^(n|N)$ ]]; then
     echo "You can access local rpi-mointor via:"
-    info "http://localhost:9999"
+    info "http://localhost:9999/RpiMonitor"
 else
     info "Install nginx..."
     echo $user_pwd | sudo -S apt-get install -y nginx
