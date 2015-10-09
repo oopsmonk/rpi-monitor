@@ -3,7 +3,6 @@ project_name='rpi-monitor'
 dir_base=`pwd`
 user=`whoami`
 pkgs="git libcairo2-dev libpango1.0-dev libglib2.0-dev libxml2-dev librrd-dev python2.7-dev rrdtool python-rrdtool python-setuptools"
-target_path="$dir_base/$project_name"
 
 function info {
     echo -e "\e[1;36m$1\e[0m"
@@ -12,6 +11,12 @@ function info {
 function err {
     echo -e "\e[1;31m$1\e[0m"
 }
+
+read -p "Installation path [${dir_base}]: " user_dir
+if [ -n "$user_dir" ]; then
+    dir_base=${user_dir}
+fi
+target_path="$dir_base/$project_name"
 
 #check if rpi-monitor exist here  
 if [[ $dir_base =~ $project_name ]]; then
@@ -120,4 +125,5 @@ else
     echo "You can access rpi-mointor via:"
     info "http://$myIP:9000/RpiMonitor"
 fi
+info "rpi-mointor is installed in ${target_path}"
 exit 0
