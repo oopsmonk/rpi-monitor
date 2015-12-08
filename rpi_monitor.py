@@ -68,13 +68,13 @@ def updateCPURRD(ctemp, cusage, pids):
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     #update data
     ret = rrd_update(CpuRRDFile, 'N:%s:%s:%s' %(ctemp, cusage, pids));
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
 
     return True
@@ -94,7 +94,7 @@ def updateCPUCoreRRD(cpu_cores, cpu_num):
                 'RRA:AVERAGE:0.5:12:1488',
                 'RRA:AVERAGE:0.5:36:2960')
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     core_avg = sum(cpu_cores)/float(4)
@@ -108,7 +108,7 @@ def updateCPUCoreRRD(cpu_cores, cpu_num):
 
     ret = rrd_update(CPUCoresRRDFile, core_data);
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
 
     return True
@@ -122,13 +122,13 @@ def updateUptimeRRD(uptime):
                 'RRA:LAST:0.5:12:1488',
                 'RRA:LAST:0.5:36:2960')
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     #update data
     ret = rrd_update(UptimeRRDFile, 'N:%s' %(uptime));
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
 
     return True
@@ -147,13 +147,13 @@ def updateMemRRD(total, used, buf, cached, free):
                 'RRA:AVERAGE:0.5:36:2960')
 
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     #update data
     ret = rrd_update(MemRRDFile, 'N:%s:%s:%s:%s:%s' %(total, used, buf, cached, free));
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
     return True
 
@@ -171,13 +171,13 @@ def updatePartitionRRD(index, total, used, free, percent):
                 'RRA:AVERAGE:0.5:36:2960')
 
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     #update data
     ret = rrd_update(MountRRDFile, 'N:%s:%s:%s:%s' %(total, used, free, percent));
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
     return True
 
@@ -193,13 +193,13 @@ def updateNetRRD(net, send, recv):
                 'RRA:AVERAGE:0.5:36:2960')
 
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     #update data
     ret = rrd_update(NetRRDFile, 'N:%s:%s' %(send, recv));
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
     return True
 
@@ -220,14 +220,14 @@ def updateDiskRRD(name, rcount, wcount, rbytes, wbytes,
                 'RRA:AVERAGE:0.5:36:2960')
 
         if ret:
-            print rrdtool.error()
+            print(rrdtool.error())
             return False
 
     #update data
     ret = rrd_update(DiskRRDFile, 
             'N:%s:%s:%s:%s:%s:%s' %(rcount, wcount, rbytes, wbytes, rtime, wtime));
     if ret:
-        print rrdtool.error()
+        print(rrdtool.error())
         return False
     return True
     
@@ -309,7 +309,7 @@ def get_mountInfo():
         '''
 def get_netInfo():
     nets = psutil.net_io_counters(pernic=True)
-    for net in nets.keys():
+    for net in list(nets.keys()):
         if net == 'lo':
             continue
         
@@ -320,7 +320,7 @@ def get_netInfo():
 def get_diskInfo():
     disks = psutil.disk_io_counters(perdisk=True)
 
-    for dname in disks.keys():
+    for dname in list(disks.keys()):
         diskio = disks.get(dname)
         #sdiskio(read_count=9837, write_count=43761, read_bytes=198268416, write_bytes=933855232, read_time=87870, write_time=35913990)
 
@@ -329,7 +329,7 @@ def get_diskInfo():
                 diskio.read_time, diskio.write_time)
 
 def test():
-    print 'test....'
+    print('test....')
     #get_netInfo()
     get_cpuInfo()
 

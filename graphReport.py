@@ -196,7 +196,7 @@ def NetInfo(period):
         rrdtool.graph(cmdList)
     
 def usage():
-    print "usage"
+    print("usage")
 
 def main():
 
@@ -207,7 +207,7 @@ def main():
     p = sys.argv[1]
     
     if not re.match('^-\d+[m,h,d,w]$', p):
-        print 'formate Error...'
+        print('formate Error...')
         sys.exit(1)
 
     CpuInfo(p)

@@ -56,7 +56,7 @@ def sysRRDFile():
 def getNetworkRRD():
     global RRDDIR 
     flist = [f for f in os.listdir(RRDDIR) if re.match('^interface-\w*\.rrd', f)] 
-    print flist 
+    print(flist) 
     return json.dumps({"rrdfile":flist})
     
 #get HDD rrd files
