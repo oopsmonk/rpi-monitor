@@ -89,9 +89,9 @@ If you want to access from the Internet, you can use `Nginx`. For more detail:
 
 ### Screenshots  
 
-<img src="https://raw.githubusercontent.com/oopsmonk/oopsmonk.github.io/master/images/2015-07-04/20141230-RPi-Monitor-Screenshot-1s.gif">
+<img src="https://raw.githubusercontent.com/oopsmonk/oopsmonk.github.io/master/static/images/2015-07-04/20141230-RPi-Monitor-Screenshot-1s.gif">  
 
-<img src="https://raw.githubusercontent.com/oopsmonk/oopsmonk.github.io/master/images/2015-07-04/RealTime_s.png">  
+<img src="https://raw.githubusercontent.com/oopsmonk/oopsmonk.github.io/main/static/images/2015-07-04/RealTime_s.png">  
 
 ### License  
 
